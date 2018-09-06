@@ -126,7 +126,7 @@
     };
   </script>
   <meta name="description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
-  <meta name="keywords" content="分词,词频,特征工程,词频统计,TF-IDF,Word2Vec,数据分析,机器学习">
+  <meta name="keywords" content="数据分析,机器学习,分词,词频,特征工程,词频统计,TF-IDF,Word2Vec">
   <meta property="og:type" content="article">
   <meta property="og:title" content="根据新闻内容预测股市动向">
   <meta property="og:url" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/index.html">
@@ -139,7 +139,7 @@
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_03.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_04.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_05.jpg">
-  <meta property="og:updated_time" content="2018-09-05T15:47:11.728Z">
+  <meta property="og:updated_time" content="2018-09-06T02:26:36.000Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="根据新闻内容预测股市动向">
   <meta name="twitter:description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
@@ -397,7 +397,7 @@
 
                         <span class="post-meta-item-text">Edited on</span>
 
-                        <time title="Modified: 2018-09-05 23:47:11" itemprop="dateModified" datetime="2018-09-05T23:47:11+08:00">2018-09-05</time>
+                        <time title="Modified: 2018-09-06 10:26:36" itemprop="dateModified" datetime="2018-09-06T10:26:36+08:00">2018-09-06</time>
 
 
                       </span>
@@ -519,7 +519,7 @@
                     </figure>
                     <p>特征选择后每个样本特征维度： 294</p>
                     <h4 id="特征降维"><a href="#特征降维" class="headerlink" title="特征降维"></a>特征降维</h4>
-                    <p>使用sklearn中的PCA实现特征降维，和特征选择不同，PCA通过线型变换将原数据映射到新的坐标系统中，使映射后的第一个坐标上的方差最大（即第一个主成分），依次递减。这里保留98%贡献率的特征向量。 </p>
+                    <p>使用sklearn中的PCA实现特征降维，和特征选择不同，PCA通过线型变换将原数据映射到新的坐标系统中，使映射后的第一个坐标上的方差最大（即第一个主成分），依次递减。这里保留95%贡献率的特征向量。 </p>
                     <figure class="highlight python">
                       <table>
                         <tr>
@@ -631,6 +631,10 @@
 
                     <div class="post-tags">
 
+                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
+
+                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+
                       <a href="/tags/分词/" rel="tag"># 分词</a>
 
                       <a href="/tags/词频/" rel="tag"># 词频</a>
@@ -642,10 +646,6 @@
                       <a href="/tags/TF-IDF/" rel="tag"># TF-IDF</a>
 
                       <a href="/tags/Word2Vec/" rel="tag"># Word2Vec</a>
-
-                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
-
-                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
 
                     </div>
 
