@@ -126,7 +126,7 @@
     };
   </script>
   <meta name="description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
-  <meta name="keywords" content="数据分析,机器学习,分词,词频,特征工程,词频统计,TF-IDF,Word2Vec">
+  <meta name="keywords" content="分词,词频,特征工程,词频统计,TF-IDF,Word2Vec,数据分析,机器学习">
   <meta property="og:type" content="article">
   <meta property="og:title" content="根据新闻内容预测股市动向">
   <meta property="og:url" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/index.html">
@@ -139,7 +139,7 @@
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_03.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_04.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_05.jpg">
-  <meta property="og:updated_time" content="2018-09-06T02:26:36.000Z">
+  <meta property="og:updated_time" content="2018-09-06T07:31:26.000Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="根据新闻内容预测股市动向">
   <meta name="twitter:description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
@@ -397,7 +397,7 @@
 
                         <span class="post-meta-item-text">Edited on</span>
 
-                        <time title="Modified: 2018-09-06 10:26:36" itemprop="dateModified" datetime="2018-09-06T10:26:36+08:00">2018-09-06</time>
+                        <time title="Modified: 2018-09-06 15:31:26" itemprop="dateModified" datetime="2018-09-06T15:31:26+08:00">2018-09-06</time>
 
 
                       </span>
@@ -533,9 +533,9 @@
                       </table>
                     </figure>
                     <p>处理后每个样本特征维度： 192</p>
-                    <h3 id="模型调参及训练"><a href="#模型调参及训练" class="headerlink" title="模型调参及训练"></a>模型调参及训练</h3>
+                    <h2 id="模型调参及训练"><a href="#模型调参及训练" class="headerlink" title="模型调参及训练"></a>模型调参及训练</h2>
                     <p>项目要解决的是分类问题，股市涨跌属于二分类问题，这里选择4种机器学习模型进行预测：朴素贝叶斯，逻辑回归，支持向量机，随机森林。其中朴素贝叶斯不需要调参，其他三个模型都需要参数调优。</p>
-                    <h4 id="训练朴素贝叶斯模型"><a href="#训练朴素贝叶斯模型" class="headerlink" title="训练朴素贝叶斯模型"></a>训练朴素贝叶斯模型</h4>
+                    <h3 id="训练朴素贝叶斯模型"><a href="#训练朴素贝叶斯模型" class="headerlink" title="训练朴素贝叶斯模型"></a>训练朴素贝叶斯模型</h3>
                     <figure class="highlight python">
                       <table>
                         <tr>
@@ -548,7 +548,7 @@
                         </tr>
                       </table>
                     </figure>
-                    <h4 id="训练逻辑回归模型"><a href="#训练逻辑回归模型" class="headerlink" title="训练逻辑回归模型"></a>训练逻辑回归模型</h4>
+                    <h3 id="训练逻辑回归模型"><a href="#训练逻辑回归模型" class="headerlink" title="训练逻辑回归模型"></a>训练逻辑回归模型</h3>
                     <p>逻辑回归为了平衡损失函数和正则项的关系，引入了损失函数的系数C作为模型超参数，C越大，损失函数的调节越重要，C越小，正则项的调节越重要。这里对C选取5个值，使用sklearn的网格搜索GridSearchCV进行交叉验证获取最优参数。 </p>
                     <figure class="highlight python">
                       <table>
@@ -563,7 +563,7 @@
                       </table>
                     </figure>
                     <p>逻辑回归最佳参数： C=10</p>
-                    <h4 id="训练SVC模型"><a href="#训练SVC模型" class="headerlink" title="训练SVC模型"></a>训练SVC模型</h4>
+                    <h3 id="训练SVC模型"><a href="#训练SVC模型" class="headerlink" title="训练SVC模型"></a>训练SVC模型</h3>
                     <p>这里对SVC的3个参数进行调优，惩罚因子C：C依然是为了平衡损失函数和正则项的关系，与逻辑回归的C不同的是，SVC的C是正则项的系数，C越大，模型的容错空间越小，越容易过拟合，C越小，模型的容错空间越大，越容易欠拟合；kernel选择高斯核函数，gamma是高斯核函数的系数，gamma越大，高斯分布越窄，越容易过拟合，gamma越小，高斯分布越宽，越容易欠拟合，这里gamma分别取0.001和0.0001。 </p>
                     <figure class="highlight python">
                       <table>
@@ -578,7 +578,7 @@
                       </table>
                     </figure>
                     <p>SVC的最佳参数是：C=0.01,gamma=0.001，kernel=’rbf’</p>
-                    <h4 id="训练随机森林模型"><a href="#训练随机森林模型" class="headerlink" title="训练随机森林模型"></a>训练随机森林模型</h4>
+                    <h3 id="训练随机森林模型"><a href="#训练随机森林模型" class="headerlink" title="训练随机森林模型"></a>训练随机森林模型</h3>
                     <p>这里选择n_estimators作为调参对象，n_estimators是子模型数量，在临界值内，数量越大，效果越好，但是计算时间也会随之增加。 </p>
                     <figure class="highlight python">
                       <table>
@@ -631,10 +631,6 @@
 
                     <div class="post-tags">
 
-                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
-
-                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
-
                       <a href="/tags/分词/" rel="tag"># 分词</a>
 
                       <a href="/tags/词频/" rel="tag"># 词频</a>
@@ -646,6 +642,10 @@
                       <a href="/tags/TF-IDF/" rel="tag"># TF-IDF</a>
 
                       <a href="/tags/Word2Vec/" rel="tag"># Word2Vec</a>
+
+                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
+
+                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
 
                     </div>
 
@@ -854,15 +854,15 @@
                             <li class="nav-item nav-level-4"><a class="nav-link" href="#特征降维"><span class="nav-number">4.2.3.</span> <span class="nav-text">特征降维</span></a></li>
                           </ol>
                         </li>
-                        <li class="nav-item nav-level-3"><a class="nav-link" href="#模型调参及训练"><span class="nav-number">4.3.</span> <span class="nav-text">模型调参及训练</span></a>
-                          <ol class="nav-child">
-                            <li class="nav-item nav-level-4"><a class="nav-link" href="#训练朴素贝叶斯模型"><span class="nav-number">4.3.1.</span> <span class="nav-text">训练朴素贝叶斯模型</span></a></li>
-                            <li class="nav-item nav-level-4"><a class="nav-link" href="#训练逻辑回归模型"><span class="nav-number">4.3.2.</span> <span class="nav-text">训练逻辑回归模型</span></a></li>
-                            <li class="nav-item nav-level-4"><a class="nav-link" href="#训练SVC模型"><span class="nav-number">4.3.3.</span> <span class="nav-text">训练SVC模型</span></a></li>
-                            <li class="nav-item nav-level-4"><a class="nav-link" href="#训练随机森林模型"><span class="nav-number">4.3.4.</span> <span class="nav-text">训练随机森林模型</span></a></li>
-                          </ol>
-                        </li>
-                        <li class="nav-item nav-level-3"><a class="nav-link" href="#模型预测与评价"><span class="nav-number">4.4.</span> <span class="nav-text">模型预测与评价</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#模型调参及训练"><span class="nav-number">5.</span> <span class="nav-text">模型调参及训练</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#训练朴素贝叶斯模型"><span class="nav-number">5.1.</span> <span class="nav-text">训练朴素贝叶斯模型</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#训练逻辑回归模型"><span class="nav-number">5.2.</span> <span class="nav-text">训练逻辑回归模型</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#训练SVC模型"><span class="nav-number">5.3.</span> <span class="nav-text">训练SVC模型</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#训练随机森林模型"><span class="nav-number">5.4.</span> <span class="nav-text">训练随机森林模型</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#模型预测与评价"><span class="nav-number">5.5.</span> <span class="nav-text">模型预测与评价</span></a></li>
                       </ol>
                     </li>
                   </ol>
