@@ -10,7 +10,10 @@ $(document).ready(function() {
   $(window).on('scroll', function() {
     clearTimeout(timeout);
     timeout = setTimeout(function() {
-      Cookies.set('scroll-cookie', $(window).scrollTop() + '|' + rpath, { expires: 365, path: '' });
+      Cookies.set('scroll-cookie', $(window).scrollTop() + '|' + rpath, {
+        expires: 365,
+        path: ''
+      });
     }, 250);
   });
 

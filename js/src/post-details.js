@@ -24,7 +24,9 @@ $(document).ready(function() {
       })
       .on('clear.bs.scrollspy', removeCurrentActiveClass);
 
-    $('body').scrollspy({ target: tocSelector });
+    $('body').scrollspy({
+      target: tocSelector
+    });
   }
 
   initScrollSpy();
@@ -47,18 +49,26 @@ $(document).ready(function() {
     var target = $('.' + item.data('target'));
 
     hasVelocity
-      ? currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function() {
+      ?
+      currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function() {
         target
           .velocity('stop')
           .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
           .addClass(activePanelClassName);
-      })
-      : currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function() {
+      }) :
+      currentTarget.animate({
+        opacity: 0
+      }, TAB_ANIMATE_DURATION, function() {
         currentTarget.hide();
         target
           .stop()
-          .css({'opacity': 0, 'display': 'block'})
-          .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function() {
+          .css({
+            'opacity': 0,
+            'display': 'block'
+          })
+          .animate({
+            opacity: 1
+          }, TAB_ANIMATE_DURATION, function() {
             currentTarget.removeClass(activePanelClassName);
             target.addClass(activePanelClassName);
           });
@@ -75,11 +85,12 @@ $(document).ready(function() {
     var offset = $(targetSelector).offset().top;
 
     hasVelocity
-      ? html.velocity('stop').velocity('scroll', {
-        offset  : offset + 'px',
+      ?
+      html.velocity('stop').velocity('scroll', {
+        offset: offset + 'px',
         mobileHA: false
-      })
-      : $('html, body').stop().animate({
+      }) :
+      $('html, body').stop().animate({
         scrollTop: offset
       }, 500);
   });
@@ -89,16 +100,16 @@ $(document).ready(function() {
   var display = CONFIG.page.sidebar;
   if (typeof display !== 'boolean') {
     // There's no definition sidebar in the page front-matter
-    var isSidebarCouldDisplay = CONFIG.sidebar.display === 'post'
-     || CONFIG.sidebar.display === 'always';
+    var isSidebarCouldDisplay = CONFIG.sidebar.display === 'post' ||
+      CONFIG.sidebar.display === 'always';
     var hasTOC = $tocContent.length > 0 && $tocContent.html().trim().length > 0;
     display = isSidebarCouldDisplay && hasTOC;
   }
   if (display) {
-    CONFIG.motion.enable
-      ? NexT.motion.middleWares.sidebar = function() {
+    CONFIG.motion.enable ?
+      NexT.motion.middleWares.sidebar = function() {
         NexT.utils.displaySidebar();
-      }
-      : NexT.utils.displaySidebar();
+      } :
+      NexT.utils.displaySidebar();
   }
 });

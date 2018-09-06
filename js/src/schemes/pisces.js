@@ -16,7 +16,9 @@ $(document).ready(function() {
   }
 
   function setSidebarMarginTop(headerOffset) {
-    return $('#sidebar').css({ 'margin-top': headerOffset });
+    return $('#sidebar').css({
+      'margin-top': headerOffset
+    });
   }
 
   function initAffix() {
@@ -29,13 +31,15 @@ $(document).ready(function() {
     if (headerOffset + sidebarHeight < contentHeight) {
       sidebarInner.affix({
         offset: {
-          top   : headerOffset - CONFIG.sidebar.offset,
+          top: headerOffset - CONFIG.sidebar.offset,
           bottom: footerOffset
         }
       });
     }
 
-    setSidebarMarginTop(headerOffset).css({ 'margin-left': 'initial' });
+    setSidebarMarginTop(headerOffset).css({
+      'margin-left': 'initial'
+    });
   }
 
   function recalculateAffixPosition() {

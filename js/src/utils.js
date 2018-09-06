@@ -42,7 +42,7 @@ NexT.utils = NexT.$u = {
   lazyLoadPostsImages: function() {
     $('#posts').find('img').lazyload({
       //placeholder: '/images/loading.gif',
-      effect   : 'fadeIn',
+      effect: 'fadeIn',
       threshold: 0
     });
   },
@@ -85,8 +85,8 @@ NexT.utils = NexT.$u = {
 
   registerESCKeyEvent: function() {
     $(document).on('keyup', function(event) {
-      var shouldDismissSearchPopup = event.which === 27
-          && $('.search-popup').is(':visible');
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
       if (shouldDismissSearchPopup) {
         $('.search-popup').hide();
         $('.search-popup-overlay').remove();
@@ -134,7 +134,7 @@ NexT.utils = NexT.$u = {
 
     function getDimension($element) {
       return {
-        width : $element.width(),
+        width: $element.width(),
         height: $element.height()
       };
     }
@@ -159,8 +159,8 @@ NexT.utils = NexT.$u = {
         $iframe.width('100%').height('100%')
           .css({
             position: 'absolute',
-            top     : '0',
-            left    : '0'
+            top: '0',
+            left: '0'
           });
 
         // Wrap the iframe in a new <div> which uses a dynamically fetched padding-top property
@@ -182,8 +182,8 @@ NexT.utils = NexT.$u = {
         // Additional adjustments for 163 Music
         if (this.src.search('music.163.com') > 0) {
           newDimension = getDimension($iframe);
-          var shouldRecalculateAspect = newDimension.width > oldDimension.width
-                                     || newDimension.height < oldDimension.height;
+          var shouldRecalculateAspect = newDimension.width > oldDimension.width ||
+            newDimension.height < oldDimension.height;
 
           // 163 Music Player has a fixed height, so we need to reset the aspect radio
           if (shouldRecalculateAspect) {
@@ -271,9 +271,9 @@ NexT.utils = NexT.$u = {
     var sidebarNavHeight = $('.sidebar-nav').css('display') === 'block' ? $('.sidebar-nav').outerHeight(true) : 0;
     var sidebarInner = $('.sidebar-inner');
     var sidebarPadding = sidebarInner.innerWidth() - sidebarInner.width();
-    var sidebarSchemePadding = this.isPisces() || this.isGemini()
-      ? (sidebarPadding * 2) + sidebarNavHeight + (CONFIG.sidebar.offset * 2) + this.getSidebarb2tHeight()
-      : (sidebarPadding * 2) + (sidebarNavHeight / 2);
+    var sidebarSchemePadding = this.isPisces() || this.isGemini() ?
+      (sidebarPadding * 2) + sidebarNavHeight + (CONFIG.sidebar.offset * 2) + this.getSidebarb2tHeight() :
+      (sidebarPadding * 2) + (sidebarNavHeight / 2);
     return sidebarSchemePadding;
   }
 
