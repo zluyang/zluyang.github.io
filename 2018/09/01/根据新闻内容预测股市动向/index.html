@@ -126,24 +126,24 @@
     };
   </script>
   <meta name="description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
-  <meta name="keywords" content="数据分析,机器学习,分词,词频,特征工程,词频统计,TF-IDF,Word2Vec">
+  <meta name="keywords" content="分词,词频,特征工程,词频统计,TF-IDF,Word2Vec,数据分析,机器学习">
   <meta property="og:type" content="article">
   <meta property="og:title" content="根据新闻内容预测股市动向">
   <meta property="og:url" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/index.html">
   <meta property="og:site_name" content="Dillon">
   <meta property="og:description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
   <meta property="og:locale" content="zh-Hans">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_raw_data.jpg">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_handle_after.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/raw_data.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/handle_after.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_01.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_03.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_04.jpg">
   <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_predict_05.jpg">
-  <meta property="og:updated_time" content="2018-09-06T07:31:26.000Z">
+  <meta property="og:updated_time" content="2018-12-18T15:34:30.322Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="根据新闻内容预测股市动向">
   <meta name="twitter:description" content="背景  项目用到的数据集来自kaggle,共包含1989条记录，每条记录包含每天的Top25条新闻，目标是通过对新闻的词频分析判断股市涨跌。  技术与方法 项目分为四部分：第一部分是解读数据，主要用到Python文本分析工具NLTK中的分词tokenize，需要说明的是，本项目是对英文做分词处理，单词间以空格作为自然分界符，而中文是根据语义做分词，常用工具是结巴分词，得到分词结果后，中英文后续的处">
-  <meta name="twitter:image" content="http://ovbu9b92e.bkt.clouddn.com/stock_raw_data.jpg">
+  <meta name="twitter:image" content="https://chixiaoxue.github.io/2018/09/01/根据新闻内容预测股市动向/raw_data.jpg">
 
 
 
@@ -397,7 +397,7 @@
 
                         <span class="post-meta-item-text">Edited on</span>
 
-                        <time title="Modified: 2018-09-06 15:31:26" itemprop="dateModified" datetime="2018-09-06T15:31:26+08:00">2018-09-06</time>
+                        <time title="Modified: 2018-12-18 23:34:30" itemprop="dateModified" datetime="2018-12-18T23:34:30+08:00">2018-12-18</time>
 
 
                       </span>
@@ -457,9 +457,9 @@
                     <p>读取原始数据集： </p>
                     <pre><code class="python">raw_text_df = pd.read_csv(constant.raw_text_csv_file)
 </code></pre>
-                    <p><img src="http://ovbu9b92e.bkt.clouddn.com/stock_raw_data.jpg" alt=""><br>第1列是日期，label为0是跌，label为1是涨，后面25列是新闻内容。接下来对原始数据集进行分词处理，这里用到NLTK的分词工具tokenize，和NLTK语料库中的停用词库stopwords，针对原始数据集的每一条新闻做分词处理，去除停用词，得到分词结果后，将分词后的25列新闻合并为1列，存在cln_text_df[‘text’]中，保存处理后的文件cln_text.csv。<br>处理后的数据：
+                    <p><img src="/2018/09/01/根据新闻内容预测股市动向/raw_data.jpg" alt=""><br>第1列是日期，label为0是跌，label为1是涨，后面25列是新闻内容。接下来对原始数据集进行分词处理，这里用到NLTK的分词工具tokenize，和NLTK语料库中的停用词库stopwords，针对原始数据集的每一条新闻做分词处理，去除停用词，得到分词结果后，将分词后的25列新闻合并为1列，存在cln_text_df[‘text’]中，保存处理后的文件cln_text.csv。<br>处理后的数据：
                     </p>
-                    <p><img src="http://ovbu9b92e.bkt.clouddn.com/stock_handle_after.jpg" alt=""> </p>
+                    <p><img src="/2018/09/01/根据新闻内容预测股市动向/handle_after.jpg" alt=""> </p>
                     <h3 id="分割训练集和测试集"><a href="#分割训练集和测试集" class="headerlink" title="分割训练集和测试集"></a>分割训练集和测试集</h3>
                     <p>读取cln_text.csv,查看总样本数量：<br><img src="http://ovbu9b92e.bkt.clouddn.com/stock_predict_01.jpg" alt=""><br>各类样本数量：<br>label<br>0 924<br>1 1065<br>正负类别样本量均衡，接下来按时间段分割训练集和测试集，训练集时间范围 2008-08-08 ~ 2014-12-31，测试集时间范围 2015-01-02 ~
                       2016-07-01。 </p>
@@ -631,10 +631,6 @@
 
                     <div class="post-tags">
 
-                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
-
-                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
-
                       <a href="/tags/分词/" rel="tag"># 分词</a>
 
                       <a href="/tags/词频/" rel="tag"># 词频</a>
@@ -646,6 +642,10 @@
                       <a href="/tags/TF-IDF/" rel="tag"># TF-IDF</a>
 
                       <a href="/tags/Word2Vec/" rel="tag"># Word2Vec</a>
+
+                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
+
+                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
 
                     </div>
 
