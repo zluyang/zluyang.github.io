@@ -133,15 +133,15 @@
   <meta property="og:site_name" content="Dillon">
   <meta property="og:description" content="期权定价原理 常用的期权定价模型是BSM模型,适用于欧式期权：本项目用蒙特卡洛模拟方法既可以对欧式期权定价，也可以对美式期权定价。蒙特卡洛方法的理论基础是概率论与数理统计，其实质是通过模拟标的资产价格路径预测期权的平均回报并得到期权价格估计值。  实现过程 生成随机数 随机数的生成是随机分析的开始，蒙特卡洛随机模拟的精度很大程度上依赖于所选的随机数。这里通过numpy.random提供的函数实现，">
   <meta property="og:locale" content="zh-Hans">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/opm_BSM.jpg">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/opm_Monte_Carlo.jpg">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/opm_paths.jpg">
-  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/opm_simulation_volatility.jpg">
-  <meta property="og:updated_time" content="2018-09-05T15:49:16.000Z">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/08/15/Python实现蒙特卡洛模拟的期权估值/BSM.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/08/15/Python实现蒙特卡洛模拟的期权估值/opm_Monte_Carlo.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/08/15/Python实现蒙特卡洛模拟的期权估值/paths.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/08/15/Python实现蒙特卡洛模拟的期权估值/simulation_volatility.jpg">
+  <meta property="og:updated_time" content="2018-12-18T15:17:43.458Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Python实现蒙特卡洛模拟的期权估值">
   <meta name="twitter:description" content="期权定价原理 常用的期权定价模型是BSM模型,适用于欧式期权：本项目用蒙特卡洛模拟方法既可以对欧式期权定价，也可以对美式期权定价。蒙特卡洛方法的理论基础是概率论与数理统计，其实质是通过模拟标的资产价格路径预测期权的平均回报并得到期权价格估计值。  实现过程 生成随机数 随机数的生成是随机分析的开始，蒙特卡洛随机模拟的精度很大程度上依赖于所选的随机数。这里通过numpy.random提供的函数实现，">
-  <meta name="twitter:image" content="http://ovbu9b92e.bkt.clouddn.com/opm_BSM.jpg">
+  <meta name="twitter:image" content="https://chixiaoxue.github.io/2018/08/15/Python实现蒙特卡洛模拟的期权估值/BSM.jpg">
 
 
 
@@ -395,7 +395,7 @@
 
                         <span class="post-meta-item-text">Edited on</span>
 
-                        <time title="Modified: 2018-09-05 23:49:16" itemprop="dateModified" datetime="2018-09-05T23:49:16+08:00">2018-09-05</time>
+                        <time title="Modified: 2018-12-18 23:17:43" itemprop="dateModified" datetime="2018-12-18T23:17:43+08:00">2018-12-18</time>
 
 
                       </span>
@@ -447,7 +447,7 @@
 
 
                     <h2 id="期权定价原理"><a href="#期权定价原理" class="headerlink" title="期权定价原理"></a>期权定价原理</h2>
-                    <p>常用的期权定价模型是BSM模型,适用于欧式期权：<br><img src="http://ovbu9b92e.bkt.clouddn.com/opm_BSM.jpg" alt=""><br>本项目用蒙特卡洛模拟方法既可以对欧式期权定价，也可以对美式期权定价。蒙特卡洛方法的理论基础是概率论与数理统计，其实质是通过模拟标的资产价格路径预测期权的平均回报并得到期权价格估计值。<br><img src="http://ovbu9b92e.bkt.clouddn.com/opm_Monte_Carlo.jpg"
+                    <p>常用的期权定价模型是BSM模型,适用于欧式期权：<br><img src="/2018/08/15/Python实现蒙特卡洛模拟的期权估值/BSM.jpg" alt=""><br>本项目用蒙特卡洛模拟方法既可以对欧式期权定价，也可以对美式期权定价。蒙特卡洛方法的理论基础是概率论与数理统计，其实质是通过模拟标的资产价格路径预测期权的平均回报并得到期权价格估计值。<br><img src="/2018/08/15/Python实现蒙特卡洛模拟的期权估值/opm_Monte_Carlo.jpg"
                         alt=""> </p>
                     <h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2>
                     <h3 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h3>
@@ -479,7 +479,7 @@
                         </tr>
                       </table>
                     </figure>
-                    <p>当给定输入条件:<br>无风险利率r=5%,定价日为2017-1-1，到期日2017-12-31，波动率volatility=20%，标的资产初始价格S=36，模拟频率按月，路径数取10000条时，看到模拟结果：<br><img src="http://ovbu9b92e.bkt.clouddn.com/opm_paths.jpg" alt=""> </p>
+                    <p>当给定输入条件:<br>无风险利率r=5%,定价日为2017-1-1，到期日2017-12-31，波动率volatility=20%，标的资产初始价格S=36，模拟频率按月，路径数取10000条时，看到模拟结果：<br><img src="/2018/08/15/Python实现蒙特卡洛模拟的期权估值/paths.jpg" alt=""> </p>
                     <p>对比波动率分别取20%和50%时，资产价格的走势： </p>
                     <figure class="highlight python">
                       <table>
@@ -493,7 +493,7 @@
                         </tr>
                       </table>
                     </figure>
-                    <p><img src="http://ovbu9b92e.bkt.clouddn.com/opm_simulation_volatility.jpg" alt=""> </p>
+                    <p><img src="/2018/08/15/Python实现蒙特卡洛模拟的期权估值/simulation_volatility.jpg" alt=""> </p>
                     <h3 id="欧式期权定价"><a href="#欧式期权定价" class="headerlink" title="欧式期权定价"></a>欧式期权定价</h3>
                     <p>有了标的资产的价格模拟路径，期权定价就容易了，以欧式看涨期权为例，计算到期日的每条路径的payoff（即max（S-X,0)），再对所有payoff取平均，折现到起始日期即得到欧式期权价格。</p>
                     <figure class="highlight python">
