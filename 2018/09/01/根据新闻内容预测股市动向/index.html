@@ -471,7 +471,7 @@
 
                         <span class="post-meta-item-text">Comments: </span>
                         <a href="/2018/09/01/根据新闻内容预测股市动向/#comments" itemprop="discussionUrl">
-                          <span class="post-comments-count valine-comment-count" data-xid="/2018/09/01/根据新闻内容预测股市动向/" itemprop="commentCount"></span>
+                          <span class="post-comments-count gitment-comments-count" data-xid="/2018/09/01/根据新闻内容预测股市动向/" itemprop="commentCount"></span>
                         </a>
                       </span>
 
@@ -754,8 +754,6 @@
             </div>
 
 
-          </div>
-          <div class="comments" id="comments">
           </div>
 
 
@@ -1130,6 +1128,39 @@
 
 
 
+
+
+  <!-- LOCAL: You can save these files to your site and update links -->
+
+
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitmint.browser.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css">
+  <!-- END LOCAL -->
+
+  <script>
+    function renderGitment() {
+      var gitment = new Gitmint({
+        id: window.location.pathname,
+        owner: 'chixiaoxue',
+        repo: 'https://github.com/chixiaoxue/gitment-comments.git',
+
+        lang: '' || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+
+        oauth: {
+
+
+          client_secret: '2480c3040304fce57f2b75c578619ba876965655',
+
+          client_id: 'e7921d1999a9ee11d0e1'
+        }
+      });
+      gitment.render('gitment-container');
+    }
+
+
+    renderGitment();
+  </script>
 
 
 
