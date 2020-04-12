@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="来到知乎后，很荣幸加入 mentor 胡淏老师的团队，在此之前，统计基础薄弱，在以后的每一次专题分析中，和 mentor 学到很多统计的实战应用和分析思维技巧，受益良多，过程中 R 语言也有一定进步，特别感谢胡淏老师的栽培，本篇内容是将胡淏老师教给我的知识进行复盘总结，分为专题分析 + model 应用 + 分析思维 + 工作方法四个部分。 专题分析 雪莉用户召回–提升 DAU 分析 背景: 10">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="学习历程">
+  <meta property="og:url" content="https://chixiaoxue.github.io/2020/04/12/Turtle Trading System/index.html">
+  <meta property="og:site_name" content="Dillon">
+  <meta property="og:description" content="来到知乎后，很荣幸加入 mentor 胡淏老师的团队，在此之前，统计基础薄弱，在以后的每一次专题分析中，和 mentor 学到很多统计的实战应用和分析思维技巧，受益良多，过程中 R 语言也有一定进步，特别感谢胡淏老师的栽培，本篇内容是将胡淏老师教给我的知识进行复盘总结，分为专题分析 + model 应用 + 分析思维 + 工作方法四个部分。 专题分析 雪莉用户召回–提升 DAU 分析 背景: 10">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:updated_time" content="2020-04-12T10:07:24.448Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="学习历程">
+  <meta name="twitter:description" content="来到知乎后，很荣幸加入 mentor 胡淏老师的团队，在此之前，统计基础薄弱，在以后的每一次专题分析中，和 mentor 学到很多统计的实战应用和分析思维技巧，受益良多，过程中 R 语言也有一定进步，特别感谢胡淏老师的栽培，本篇内容是将胡淏老师教给我的知识进行复盘总结，分为专题分析 + model 应用 + 分析思维 + 工作方法四个部分。 专题分析 雪莉用户召回–提升 DAU 分析 背景: 10">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://chixiaoxue.github.io/2020/04/12/Turtle Trading System/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>学习历程 | Dillon</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">Dillon</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://chixiaoxue.github.io/2020/04/12/Turtle Trading System/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="迟晓雪">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="Dillon">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">学习历程
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2020-04-12 18:26:39 / Modified: 18:07:24" itemprop="dateCreated datePublished" datetime="2020-04-12T18:26:39+08:00">2020-04-12</time>
+
+
+
+
+
+
+
+                      </span>
+
+
+                      <span class="post-category">
+
+                        <span class="post-meta-divider">|</span>
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-folder-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">In</span>
+
+
+                        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据分析/" itemprop="url" rel="index"><span itemprop="name">数据分析</span></a></span>
+
+
+
+
+                      </span>
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2020/04/12/Turtle Trading System/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count gitment-comments-count" data-xid="/2020/04/12/Turtle Trading System/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2020/04/12/Turtle Trading System/" class="leancloud_visitors" data-flag-title="学习历程">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <p>来到知乎后，很荣幸加入 mentor 胡淏老师的团队，在此之前，统计基础薄弱，在以后的每一次专题分析中，和 mentor 学到很多统计的实战应用和分析思维技巧，受益良多，过程中 R 语言也有一定进步，特别感谢胡淏老师的栽培，本篇内容是将胡淏老师教给我的知识进行复盘总结，分为专题分析 + model 应用 + 分析思维 + 工作方法四个部分。</p>
+                    <h1 id="专题分析"><a href="#专题分析" class="headerlink" title="专题分析"></a>专题分析</h1>
+                    <h2 id="雪莉用户召回–提升-DAU-分析"><a href="#雪莉用户召回–提升-DAU-分析" class="headerlink" title="雪莉用户召回–提升 DAU 分析"></a>雪莉用户召回–提升 DAU 分析</h2>
+                    <h3 id="背景"><a href="#背景" class="headerlink" title="背景:"></a>背景:</h3>
+                    <p>10/14 由于「雪莉事件」 DAU 达到历史峰值，但在次日后流失严重，通过分析「雪莉」用户行为找到业务发力点，面对此类热点事件带来的低频和沉默用户，如何有效承接。</p>
+                    <h3 id="学习心得："><a href="#学习心得：" class="headerlink" title="学习心得："></a>学习心得：</h3>
+                    <p>这是来知乎做的的第一次专题分析，前3天没有得到有效发现，经 mentor 指点，有策略的选取指标可以提高分析的边际收益：<br>定量指标：未看率，未 push 触达率<br>未看率指标：<br>对单篇优质内容，10/15 流失的「雪莉用户」在前一天未看过的人数 / 10/15 流失的「雪莉用户」数<br>未 Push 下发率：<br>对单篇优质内容，向 10/15 流失的「雪莉用户」下发的人数 / 10/15 流失的「雪莉用户」数<br>优质内容的未看率和未push
+                      触达率都接近100%，说明流失的雪莉用户并没有通过主动探索找到优质内容，DAU 和 体验都有较大提升空间，这 2 个指标简单直接，且对业务产生较大冲击，助推热点运营小组为以后热点的承接找到有效抓手。</p>
+                    <h2 id="学生群体-push-策略-did-分析"><a href="#学生群体-push-策略-did-分析" class="headerlink" title="学生群体 push 策略 did 分析:"></a>学生群体 push 策略 did 分析:</h2>
+                    <h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3>
+                    <p>自 10/31 奇葩说开播以来，各路神仙辩手、节目中产生的诸如“精致穷”等热点话题在学生群体中引起广泛讨论，这一点从每周六开播时间的学生搜索排行可以见得；期望捞起这部分用户 push 奇葩说热点内容，进而提升低频学生群体的活跃。</p>
+                    <h3 id="学习心得：-1"><a href="#学习心得：-1" class="headerlink" title="学习心得："></a>学习心得：</h3>
+                    <ol>
+                      <li>这是第一次在实战中接触 A/B testing，分别随机选取了 100w 学生用户作为实验组和对照组，观察收到奇葩说 push 的实验组和对照组的留存差异，但是由于实验前AB两组的留存就有显著差异，对于这种实验前不同质的情况就非常有必要控制住人群差异和大盘在不同时段的差异，用 did 进行实验分析：<br>Apost = Apre + 大盘影响 + w<br>Bpost = Bpre + 大盘影响<br>所以 push干预 w = Apost
+                        - Bpost - ( Apre -
+                        Bpre)</li>
+                      <li>要考虑到指标之间的影响，背后可能存在的逻辑是什么。did 用的指标是留存，但实验组 ctr 是高于大盘运营 push ctr 的，说明了有更低频的学生用户被调起，因此看次留对实验组可能不公平。理论上的 gap 会更大，加强了对奇葩说push 提升学生用户留存的印证。</li>
+                      <li>基于实验结果应想到业务的增量在哪里（影响量级 + 时效内容更新），是否必要进一步做细分实验,下一次实验又要怎样设计等等<br>衍生知识：<br>正常指标：cardshow 服从 泊松分布，但整体人均cardshow 服从 t 分布<br>比率型指标：如次留服从二项分布<br>根据不同类型的指标在做 did 时注意方差计算公式是不一样的 </li>
+                    </ol>
+                    <h2 id="热榜问答流量分布评估"><a href="#热榜问答流量分布评估" class="headerlink" title="热榜问答流量分布评估"></a>热榜问答流量分布评估</h2>
+                    <h3 id="背景-1"><a href="#背景-1" class="headerlink" title="背景"></a>背景</h3>
+                    <p>氛围团队原审核机制是在榜 50 个问题每个问题的前 6 位回答会进入工单后台送审。如果审核通过，则回答继续在问题前 6 位自由流通，如审核不通过，则回答会被机制反对而退出前 6 位。需要评估现有机制的合理性。 </p>
+                    <h3 id="学习心得"><a href="#学习心得" class="headerlink" title="学习心得"></a>学习心得</h3>
+                    <p>胡淏老师根据业务方的痛点：「审核是否覆盖了多数流量？」，迅速给出了解决方案，审核机制不再到问题而是到回答，并在后续分析评估中验证了到问题的不合理性。感觉有时找不到问题的出口时，应大胆寻求第二序改变，打破原有的既定模式会带来更好的运营效果。 </p>
+                    <h1 id="model-应用"><a href="#model-应用" class="headerlink" title="model 应用"></a>model 应用</h1>
+                    <h2 id="casual-Impact-："><a href="#casual-Impact-：" class="headerlink" title="casual Impact ："></a>casual Impact ：</h2>
+                    <p>CausalImpact 的原理是假定可以使用一组自身不受干预影响的 control time seires 来预测 post-period 的 time series。（衡量如果未干预的趋势时，可以选择其他时间序列，和本来要预测的趋势相关，但是本身不会直接被干预影响）<br>应用于审核策略调整对内容分发的影响评估：</p>
+                    <h3 id="背景-2"><a href="#背景-2" class="headerlink" title="背景"></a>背景</h3>
+                    <p>12/20 社区治理审核策略调整，对涉领导人的内容进行扩量审核，导致审核召回内容变多，审核时间变长，分析内容分发、生产、用户全局时长、留存是否受到影响。 </p>
+                    <h3 id="学习心得-1"><a href="#学习心得-1" class="headerlink" title="学习心得"></a>学习心得</h3>
+                    <p>内容分发潜在影响：<br>影响内容群体：政治领域召回的内容<br>参照内容群体：政治领域未被召回的内容<br>CausalImpact 的输出可以直观看到 Actual 和 Prediction 的绝对差异，以及干预带来的 Relative effect<br>CausalImpact 简单实用，感觉重点是准确找到干预之前的参照群体，可以应用于其他影响定量评估类场景，比如「治理对251事件搜索用户的影响」，就可以找到多个类似 query 对应的
+                      timeseries，然后通过对
+                      query 画像的控制进一步拟合出和华为 251 类似的参照群体。</p>
+                    <h2 id="异动归因-scanning-model-："><a href="#异动归因-scanning-model-：" class="headerlink" title="异动归因 scanning model ："></a>异动归因 scanning model ：</h2>
+                    <p>scanning model 对每周 DAU 异动归因有很大帮助，分别从量（DAU）和质量（体验指标）的角度把用户构成变化和本身体验变化带来的影响量化，尤其是胡淏老师后来关于 between_change 的优化（减去大盘水平），这一步调整解决了我之前一直以来的解读困惑：低于大盘水平的群体比重上升时，对大盘贡献度终于是负的了。解读再无障碍 ~（狂赞）<br>这部分 code 价值 millon dollar
+                      ，不会在这里过多陈述，期待原作者的白皮书~<br>胡淏老师在model
+                      里还加入了xgboost model,用以输出重要的交叉维度变量，虽然还未应用，但这一步的思想和实现过程非常有意义，值得学习和深挖，做了简单的总结: </p>
+                    <ul>
+                      <li>interaction_varImp_report ：xgboost实现对交叉维度的特征选取，然后通过cv.glmnet 线性回归建模，得到各交叉维度的 β 值 </li>
+                      <li>交叉维度的考虑：追求看到更多细节，把真正出现问题的维度组合拎出来；异动归因时会有更好的 storyline </li>
+                      <li>单变量存在的问题：within 只呈现占比大的 level ，没有太多意义；真正有意义的是：大盘跌了，找到超越大盘跌幅的level是什么 </li>
+                      <li>xgboost 强行变成分类器，为了有regression 效果，分类比较多。xgboost 把所有潜在有可能有意义的interaction 挑出来，但哪个重要，边际影响是多少不能定量 </li>
+                      <li>β 和 between or within 的量有同等意义 </li>
+                      <li>val interaction 的应用场景可以有很多，factor 替换成要看的指标即可</li>
+                    </ul>
+                    <h2 id="关于回归："><a href="#关于回归：" class="headerlink" title="关于回归："></a>关于回归：</h2>
+                    <p>回归在工作中的应用非常广泛，通过灵活运用回归方法可以解决很多业务的棘手问题，列举几个使用场景：（建立 model 前提数据一定要准确） </p>
+                    <ol>
+                      <li>热点提活效应分析中，控制渠道、频次等信息，观察访问热点对用户留存的影响，还可以通过加入交互项看在哪个渠道访问了热点后对留存增益更大<br>lm(retention_next_day~0+channel<br>+channel:hot_content_read_num_100<br>+frequency<br>+days_last_week,data) </li>
+                      <li>全局时长（/推荐页时长）与有效阅读相关性验证<br>用户的时长、epv 分布是不均匀的，但对二者都进行log -log处理之后，分布更加偏向 gaussian 且关系更加线性,log-log 看的是弹性(变量取对数后，差分就是增长率)，是x的变动率对 y变动率的边际影响，R方体现了model 的拟合程度。 </li>
+                      <li>指标阈值寻找：视频有效阅读指标定义<br>先通过shallow explore 找到可以指向用户天时长的变量阈值（播放时长 40s和55s,播放完成率99%），然后控制不同视频长度下的播放时长和播放完成率，建立天时长和 epv 的回归模型，通过不同阈值的epv对天时长的边际效应结合覆盖率的影响，找出最优的视频有效阅读定义。<br>这套方法非常科学且实用，可以用于任何指标的定义。 <h2 id="shallow-explore"><a href="#shallow-explore"
+                            class="headerlink" title="shallow explore"></a>shallow explore</h2>大大节省分析师时间的万金油工具，帮我们快速找到影响目标变量的关键指标集合，使用前需要思考：哪些量应该放进模型<br>Y ：搜索用户留存的增量<br>X ：多个指标的权衡和取舍<br>原理：boosting 级联，每个model学前两个model的残差<br>主要参数：<br>ntrees=1000
+                        1000个级联模型<br>var.monotone
+                        指定单调性<br>应用场景：<br>业务指标的定义，如视频有效阅读，搜索满意点击比等等。</li>
+                    </ol>
+                    <h1 id="分析思维（核心是思辨）"><a href="#分析思维（核心是思辨）" class="headerlink" title="分析思维（核心是思辨）"></a>分析思维（核心是思辨）</h1>
+                    <p> 一些感想： </p>
+                    <ul>
+                      <li>抽样很重要，不同的抽样方法结果差异很大，一定要保证是随机抽样（order by rand()） </li>
+                      <li>关于状态转移矩阵：<br>应用前提： <ol>
+                          <li>满足 MECE 假设 </li>
+                          <li>适用于双向状态转移，用矩阵表示不容易丢维度<br>数据解读时要有存量、增量思维：<br>要考虑数据的动态变化，如城市迁移分析中，一线城市次留环比下降，一部分原因是有三线天然低频迁移过来的人群干扰，实际跌幅或有高估。<br>根据动态行为还原人群属性差异：<br>用户发生迁移行为，留存数据环比跌幅出现差异，反推产生迁移行为的人在未迁移情况下的天然属性是否与原群体其他人群存在差异</li>
+                        </ol>
+                      </li>
+                      <li>统计追求模糊的正确，而不是精确的错误，这是我们去追求client_id 与 member_id 一一对应的意义 </li>
+                    </ul>
+                    <p>#工作方法<br>和 leader 沟通时，要有清晰的框架<br>交流之前 check： </p>
+                    <ul>
+                      <li>数据是否准确 </li>
+                      <li>相关定义是否明确 </li>
+                      <li>展现是否合理<br>交流框架： </li>
+                      <li>要回答的问题 </li>
+                      <li>用什么指标，用哪些维度 </li>
+                    </ul>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2019/01/08/Turtle Trading System/" rel="next" title="海龟交易系统">
+                          <i class="fa fa-chevron-left"></i> 海龟交易系统
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+
+            <div id="gitment-container"></div>
+
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">迟晓雪</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">8</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">3</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">11</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#专题分析"><span class="nav-number">1.</span> <span class="nav-text">专题分析</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#雪莉用户召回–提升-DAU-分析"><span class="nav-number">1.1.</span> <span class="nav-text">雪莉用户召回–提升 DAU 分析</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.1.</span> <span class="nav-text">背景:</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#学习心得："><span class="nav-number">1.1.2.</span> <span class="nav-text">学习心得：</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#学生群体-push-策略-did-分析"><span class="nav-number">1.2.</span> <span class="nav-text">学生群体 push 策略 did 分析:</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#背景："><span class="nav-number">1.2.1.</span> <span class="nav-text">背景：</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#学习心得：-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">学习心得：</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#热榜问答流量分布评估"><span class="nav-number">1.3.</span> <span class="nav-text">热榜问答流量分布评估</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#背景-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">背景</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#学习心得"><span class="nav-number">1.3.2.</span> <span class="nav-text">学习心得</span></a></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#model-应用"><span class="nav-number">2.</span> <span class="nav-text">model 应用</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#casual-Impact-："><span class="nav-number">2.1.</span> <span class="nav-text">casual Impact ：</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#背景-2"><span class="nav-number">2.1.1.</span> <span class="nav-text">背景</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#学习心得-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">学习心得</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#异动归因-scanning-model-："><span class="nav-number">2.2.</span> <span class="nav-text">异动归因 scanning model ：</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#关于回归："><span class="nav-number">2.3.</span> <span class="nav-text">关于回归：</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#shallow-explore"><span class="nav-number">2.4.</span> <span class="nav-text">shallow explore</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#分析思维（核心是思辨）"><span class="nav-number">3.</span> <span class="nav-text">分析思维（核心是思辨）</span></a></li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">迟晓雪</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+  <!-- LOCAL: You can save these files to your site and update links -->
+
+
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitmint.browser.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css">
+  <!-- END LOCAL -->
+
+  <script>
+    function renderGitment() {
+      var gitment = new Gitmint({
+        id: window.location.pathname,
+        owner: 'chixiaoxue',
+        repo: 'chixiaoxue.github.io',
+
+        lang: '' || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+
+        oauth: {
+
+
+          client_secret: '2480c3040304fce57f2b75c578619ba876965655',
+
+          client_id: 'e7921d1999a9ee11d0e1'
+        }
+      });
+      gitment.render('gitment-container');
+    }
+
+
+    renderGitment();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
