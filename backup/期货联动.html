@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="大宗商品&amp;amp;商品股票联动策略 策略思想： 策略思想来自中信期货研究报告，外盘大宗商品价格和A股黄金概念板块的价格存在很强的相关性 策略规则    商品收盘价格突破m周期最高价买入；   从买入信号发生的次日开始计算净值，默认假设以第二天开盘价进行买入；   单笔交易自净值最高点下跌超过一定比例则平仓,移动止损；   忽略持仓期间重复出现的开仓信号.   策略实现 读取数据 读入商品和股票数据">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="期货联动">
+  <meta property="og:url" content="https://chixiaoxue.github.io/backup/期货联动.html">
+  <meta property="og:site_name" content="Dillon">
+  <meta property="og:description" content="大宗商品&amp;amp;商品股票联动策略 策略思想： 策略思想来自中信期货研究报告，外盘大宗商品价格和A股黄金概念板块的价格存在很强的相关性 策略规则    商品收盘价格突破m周期最高价买入；   从买入信号发生的次日开始计算净值，默认假设以第二天开盘价进行买入；   单笔交易自净值最高点下跌超过一定比例则平仓,移动止损；   忽略持仓期间重复出现的开仓信号.   策略实现 读取数据 读入商品和股票数据">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_1.png">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_2.png">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_3.png">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_4.png">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_5.png">
+  <meta property="og:image" content="https://chixiaoxue.github.io/backup/qhld_6.png">
+  <meta property="og:updated_time" content="2019-04-27T07:19:44.000Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="期货联动">
+  <meta name="twitter:description" content="大宗商品&amp;amp;商品股票联动策略 策略思想： 策略思想来自中信期货研究报告，外盘大宗商品价格和A股黄金概念板块的价格存在很强的相关性 策略规则    商品收盘价格突破m周期最高价买入；   从买入信号发生的次日开始计算净值，默认假设以第二天开盘价进行买入；   单笔交易自净值最高点下跌超过一定比例则平仓,移动止损；   忽略持仓期间重复出现的开仓信号.   策略实现 读取数据 读入商品和股票数据">
+  <meta name="twitter:image" content="https://chixiaoxue.github.io/backup/qhld_1.png">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://chixiaoxue.github.io/backup/期货联动">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>期货联动 | Dillon</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">Dillon</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+              <div class="post-block page">
+                <header class="post-header">
+
+                  <h1 class="post-title" itemprop="name headline">期货联动
+
+                  </h1>
+
+                  <div class="post-meta">
+
+
+
+
+
+                  </div>
+
+                </header>
+
+
+
+
+                <div class="post-body">
+
+
+                  <h1 id="大宗商品-amp-商品股票联动策略"><a href="#大宗商品-amp-商品股票联动策略" class="headerlink" title="大宗商品&amp;商品股票联动策略"></a>大宗商品&amp;商品股票联动策略</h1>
+                  <h2 id="策略思想："><a href="#策略思想：" class="headerlink" title="策略思想："></a>策略思想：</h2>
+                  <p>策略思想来自中信期货研究报告，外盘大宗商品价格和A股黄金概念板块的价格存在很强的相关性</p>
+                  <h2 id="策略规则"><a href="#策略规则" class="headerlink" title="策略规则"></a>策略规则</h2>
+                  <ul>
+                    <li>商品收盘价格突破m周期最高价买入；</li>
+                    <li>从买入信号发生的次日开始计算净值，默认假设以第二天开盘价进行买入；</li>
+                    <li>单笔交易自净值最高点下跌超过一定比例则平仓,移动止损；</li>
+                    <li>忽略持仓期间重复出现的开仓信号. </li>
+                  </ul>
+                  <h2 id="策略实现"><a href="#策略实现" class="headerlink" title="策略实现"></a>策略实现</h2>
+                  <h3 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h3>
+                  <p>读入商品和股票数据，并计算伦敦金的每日收益率</p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">commodity_df = pd.read_csv(&apos;data/XAU.csv&apos;, index_col=0, parse_dates=True)[&apos;2007&apos;:]</span><br><span class="line">stock_df = pd.read_csv(&apos;data/concept_return.csv&apos;, index_col=0, parse_dates=True)[&apos;2007&apos;:]</span><br><span class="line">commodity_df[&apos;com_return&apos;] = commodity_df.c.pct_change()</span><br><span class="line">commodity_df.head()</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_1.png" alt=""> </p>
+                  <p>黄金板块股票的每日收益率： </p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">stock_df.head()</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_2.png" alt=""> </p>
+                  <h3 id="计算开仓信号"><a href="#计算开仓信号" class="headerlink" title="计算开仓信号"></a>计算开仓信号</h3>
+                  <p>当今天黄金收盘价高于过去10日平均时发出开仓信号： </p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">long_signal_period = 10</span><br><span class="line">commodity_df[&apos;rolling_max&apos;] = commodity_df.h.rolling(long_signal_period).max().shift(1)  </span><br><span class="line">commodity_df[&apos;open_signal&apos;] = np.where((commodity_df.c &gt; commodity_df.rolling_max), 1, 0)</span><br><span class="line">commodity_df.head(20)</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_3.png" alt="alt text"> </p>
+                  <h3 id="计算持仓信号"><a href="#计算持仓信号" class="headerlink" title="计算持仓信号"></a>计算持仓信号</h3>
+                  <p>每天判断账户净值水平，当账户离当前交易下的最高净值下跌10%时移动止损或止盈： </p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">holding = False                   </span><br><span class="line">net = 1                        # 记录单笔交易净值   </span><br><span class="line">net_max = 1                    # 记录单笔交易账户净值的最大值，作为是否卖出的判断依据   </span><br><span class="line"></span><br><span class="line">for idx, row in stock_df.iterrows():   </span><br><span class="line">    if holding:                                           </span><br><span class="line">        net *= (row.equity_return + 1)   </span><br><span class="line">        net_max = max(net, net_max)   </span><br><span class="line">        stock_df.loc[idx, &apos;holding_signal&apos;] = 1           # holding_signal记录是否持仓；</span><br><span class="line"></span><br><span class="line">        if net &lt; net_max * stop_net:                      # 检查是否触发平仓条件: 最高净值下跌超过10%则平仓</span><br><span class="line">            holding = False</span><br><span class="line">            net = 1                                       # 重置单笔策略净值为初始值1</span><br><span class="line">            net_max = 1</span><br><span class="line">       </span><br><span class="line">            </span><br><span class="line">    else:                                                  # 不持仓的情况</span><br><span class="line">        stock_df.loc[idx, &apos;holding_signal&apos;] = 0</span><br><span class="line">        if row[&apos;open_signal&apos;] == 1:                        # 在不持仓时检查时候出现开仓信号，出现开仓信号，当天发出开仓信号，在下一天进行股票买入</span><br><span class="line">            holding = True                                 # 开仓信号出现的下一天开始持仓   </span><br><span class="line">stock_df.head(20)</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_4.png" alt=""> </p>
+                  <h3 id="计算组合净值"><a href="#计算组合净值" class="headerlink" title="计算组合净值"></a>计算组合净值</h3>
+                  <p>计算组合累积净值</p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">stock_df[&apos;portfolio_return&apos;] = stock_df.equity_return * stock_df.holding_signal   # 投资组合收益率 </span><br><span class="line">stock_df[&apos;portfolio&apos;] = (stock_df.portfolio_return + 1).cumprod()</span><br><span class="line">stock_df.tail()</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_5.png" alt=""> </p>
+                  <h3 id="benchmark-净值计算"><a href="#benchmark-净值计算" class="headerlink" title="benchmark 净值计算"></a>benchmark 净值计算</h3>
+                  <p>分别计算黄金板块股票和大宗商品黄金的累积收益</p>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">stock_df[&apos;stocks&apos;] = (stock_df.equity_return + 1).cumprod()                     # 黄金板块股票累积收益</span><br><span class="line">commodity_df[&apos;commodity&apos;] = (commodity_df.com_return + 1).cumprod()             # 大宗商品黄金累积收益</span><br><span class="line">stock_df[&apos;commodity&apos;] = commodity_df.commodity</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <h3 id="生成净值曲线"><a href="#生成净值曲线" class="headerlink" title="生成净值曲线"></a>生成净值曲线</h3>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">import seaborn</span><br><span class="line">stock_df[[&apos;portfolio&apos;, &apos;stocks&apos;, &apos;commodity&apos;]].plot(figsize=(12,8))</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p><img src="/backup/qhld_6.png" alt=""> </p>
+                  <h2 id="策略评价"><a href="#策略评价" class="headerlink" title="策略评价"></a>策略评价</h2>
+                  <h3 id="Sharpe-Ratio"><a href="#Sharpe-Ratio" class="headerlink" title="Sharpe Ratio"></a>Sharpe Ratio</h3>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">p_return = stock_df.portfolio_return</span><br><span class="line">sharpe_ratio = np.sqrt(252) * np.mean(p_return) / np.std(p_return)</span><br><span class="line">sharpe_ratio</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p>得到Sharpe Ratio：1.2354358698026058 </p>
+                  <h3 id="最大回撤"><a href="#最大回撤" class="headerlink" title="最大回撤"></a>最大回撤</h3>
+                  <figure class="highlight plain">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">stock_df[&apos;cum_max&apos;] = stock_df.portfolio.cummax()</span><br><span class="line">stock_df[&apos;drawdown&apos;] = 1 - stock_df.portfolio / stock_df.cum_max   </span><br><span class="line">max_drawdown = stock_df.drawdown.max()</span><br><span class="line">max_drawdown</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                  <p>得到最大回撤：0.38804582454916203</p>
+
+                </div>
+
+
+
+              </div>
+
+
+
+
+
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+
+            <div id="gitment-container"></div>
+
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">迟晓雪</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+
+
+
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#大宗商品-amp-商品股票联动策略"><span class="nav-number">1.</span> <span class="nav-text">大宗商品&amp;商品股票联动策略</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#策略思想："><span class="nav-number">1.1.</span> <span class="nav-text">策略思想：</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#策略规则"><span class="nav-number">1.2.</span> <span class="nav-text">策略规则</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#策略实现"><span class="nav-number">1.3.</span> <span class="nav-text">策略实现</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#读取数据"><span class="nav-number">1.3.1.</span> <span class="nav-text">读取数据</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#计算开仓信号"><span class="nav-number">1.3.2.</span> <span class="nav-text">计算开仓信号</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#计算持仓信号"><span class="nav-number">1.3.3.</span> <span class="nav-text">计算持仓信号</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#计算组合净值"><span class="nav-number">1.3.4.</span> <span class="nav-text">计算组合净值</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#benchmark-净值计算"><span class="nav-number">1.3.5.</span> <span class="nav-text">benchmark 净值计算</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#生成净值曲线"><span class="nav-number">1.3.6.</span> <span class="nav-text">生成净值曲线</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#策略评价"><span class="nav-number">1.4.</span> <span class="nav-text">策略评价</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#Sharpe-Ratio"><span class="nav-number">1.4.1.</span> <span class="nav-text">Sharpe Ratio</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#最大回撤"><span class="nav-number">1.4.2.</span> <span class="nav-text">最大回撤</span></a></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">迟晓雪</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+  <!-- LOCAL: You can save these files to your site and update links -->
+
+
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitmint.browser.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css">
+  <!-- END LOCAL -->
+
+  <script>
+    function renderGitment() {
+      var gitment = new Gitmint({
+        id: window.location.pathname,
+        owner: 'chixiaoxue',
+        repo: 'chixiaoxue.github.io',
+
+        lang: '' || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+
+        oauth: {
+
+
+          client_secret: '2480c3040304fce57f2b75c578619ba876965655',
+
+          client_id: 'e7921d1999a9ee11d0e1'
+        }
+      });
+      gitment.render('gitment-container');
+    }
+
+
+    renderGitment();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function showTime(Counter) {
+      var entries = [];
+      var $visitors = $('.leancloud_visitors');
+
+      $visitors.each(function() {
+        entries.push($(this).attr('id').trim());
+      });
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url: {
+              '$in': entries
+            }
+          })
+        })
+        .done(function({
+          results
+        }) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if (countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          if ($('.post-title-link').length >= 1) {
+            showTime(Counter);
+          }
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
