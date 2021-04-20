@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="房产是一个人一生中的核心资产，而房地产行业以北上深一线大城市最为发达，需求最旺盛，本项目利用爬虫爬取链家网北京市二手房信息，对于普遍关注的问题和影响房价的相关因素，通过探索性数据分析找出答案，再建立机器学习模型实现随行就市的自动化房屋价格预测。 项目目的： 通过实际数据针对以下问题进行分析     北京二手房整体价格分布    各行政区房价差异    房龄在2000年以后的房源在各行政区的分布">
+  <meta name="keywords" content="爬虫,数据分析,机器学习">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="北京市二手房数据分析">
+  <meta property="og:url" content="https://chixiaoxue.github.io/2018/09/02/houseprice data analysis/index.html">
+  <meta property="og:site_name" content="Dillon">
+  <meta property="og:description" content="房产是一个人一生中的核心资产，而房地产行业以北上深一线大城市最为发达，需求最旺盛，本项目利用爬虫爬取链家网北京市二手房信息，对于普遍关注的问题和影响房价的相关因素，通过探索性数据分析找出答案，再建立机器学习模型实现随行就市的自动化房屋价格预测。 项目目的： 通过实际数据针对以下问题进行分析     北京二手房整体价格分布    各行政区房价差异    房龄在2000年以后的房源在各行政区的分布">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/handle_before.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/handle_after.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/hist_price.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/unitprice_by_district.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/box_price.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/house_numbers_pie.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/house_new_numbers.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/house_haidian.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/house_xicheng.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/price_elevator.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/attention_apartment.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/attention_buildingtype.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/attention_size.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/price_limit.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/heatmap.jpg">
+  <meta property="og:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/RidgeRegression%E9%A2%84%E6%B5%8B%E6%95%88%E6%9E%9C.jpg">
+  <meta property="og:updated_time" content="2019-04-27T07:21:41.000Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="北京市二手房数据分析">
+  <meta name="twitter:description" content="房产是一个人一生中的核心资产，而房地产行业以北上深一线大城市最为发达，需求最旺盛，本项目利用爬虫爬取链家网北京市二手房信息，对于普遍关注的问题和影响房价的相关因素，通过探索性数据分析找出答案，再建立机器学习模型实现随行就市的自动化房屋价格预测。 项目目的： 通过实际数据针对以下问题进行分析     北京二手房整体价格分布    各行政区房价差异    房龄在2000年以后的房源在各行政区的分布">
+  <meta name="twitter:image" content="https://chixiaoxue.github.io/2018/09/02/houseprice%20data%20analysis/handle_before.jpg">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://chixiaoxue.github.io/2018/09/02/houseprice data analysis/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>北京市二手房数据分析 | Dillon</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">Dillon</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://chixiaoxue.github.io/2018/09/02/houseprice data analysis/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="迟晓雪">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="Dillon">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">北京市二手房数据分析
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2018-09-02 08:00:00" itemprop="dateCreated datePublished" datetime="2018-09-02T08:00:00+08:00">2018-09-02</time>
+
+
+
+
+
+
+
+                        <span class="post-meta-divider">|</span>
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-check-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Edited on</span>
+
+                        <time title="Modified: 2019-04-27 15:21:41" itemprop="dateModified" datetime="2019-04-27T15:21:41+08:00">2019-04-27</time>
+
+
+                      </span>
+
+
+                      <span class="post-category">
+
+                        <span class="post-meta-divider">|</span>
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-folder-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">In</span>
+
+
+                        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据分析/" itemprop="url" rel="index"><span itemprop="name">数据分析</span></a></span>
+
+
+
+
+                      </span>
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2018/09/02/houseprice data analysis/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count gitment-comments-count" data-xid="/2018/09/02/houseprice data analysis/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2018/09/02/houseprice data analysis/" class="leancloud_visitors" data-flag-title="北京市二手房数据分析">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <p>房产是一个人一生中的核心资产，而房地产行业以北上深一线大城市最为发达，需求最旺盛，本项目利用爬虫爬取链家网北京市二手房信息，对于普遍关注的问题和影响房价的相关因素，通过探索性数据分析找出答案，再建立机器学习模型实现随行就市的自动化房屋价格预测。</p>
+                    <h2 id="项目目的："><a href="#项目目的：" class="headerlink" title="项目目的："></a>项目目的：</h2>
+                    <p>通过实际数据针对以下问题进行分析 </p>
+                    <ol>
+                      <li>北京二手房整体价格分布 </li>
+                      <li>各行政区房价差异 </li>
+                      <li>房龄在2000年以后的房源在各行政区的分布 </li>
+                      <li>房龄对房价的影响 </li>
+                      <li>电梯对房价的影响 </li>
+                      <li>最受关注的房源有哪些特点 </li>
+                      <li>首付100万以内能买到哪些小区 </li>
+                      <li>通过相关系数矩阵选取影响房价的特征 </li>
+                      <li>建立机器学习模型评估房价 </li>
+                      <li>模型评价 </li>
+                    </ol>
+                    <h2 id="技术和工具"><a href="#技术和工具" class="headerlink" title="技术和工具"></a>技术和工具</h2>
+                    <p>项目主要分为三部分，以Python编程语言为基础，第一部分是数据爬取，主要用到网页解析库BeautifulSoup。第二部分是数据分析，使用pandas作为数据处理和统计分析的工具，以matplotlib,seaborn库实现图形的可视化。第三部分是机器学习建模，用到scikit-learn中的三种回归建模模型，分别是线性回归、岭回归、支撑向量机，并用GridSearchCV对岭回归参数alpha进行交叉验证调优。</p>
+                    <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2>
+                    <h3 id="数据获取"><a href="#数据获取" class="headerlink" title="数据获取"></a>数据获取</h3>
+                    <p>项目所使用的数据集全部来自链家网，通过BeautifulSoup爬取链家北京二手房100页房源数据。 </p>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">101</span>):</span><br><span class="line">     <span class="keyword">if</span> i == <span class="number">1</span>:</span><br><span class="line">          i=str(i)</span><br><span class="line">          a=(url+page+i+<span class="string">'/'</span>)</span><br><span class="line">          r=requests.get(url=a,headers=headers)</span><br><span class="line">          html=r.content</span><br><span class="line">     <span class="keyword">else</span>:</span><br><span class="line">          i=str(i)</span><br><span class="line">          a=(url+page+i+<span class="string">'/'</span>)</span><br><span class="line">          r=requests.get(url=a,headers=headers)</span><br><span class="line">          html2=r.content</span><br><span class="line">          html = html + html2</span><br><span class="line">     <span class="comment">#每次间隔1秒</span></span><br><span class="line">     time.sleep(<span class="number">1</span>)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>分别提取房源单价、房源总价、房源位置、关注度等信息，得到3000个样本数据：<br><img src="/2018/09/02/houseprice data analysis/handle_before.jpg" alt=""></p>
+                    <h3 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h3>
+                    <p>保留全量数据，对缺失值、无效值等进行处理：</p>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">#处理房源面积数据</span></span><br><span class="line">house_wash[<span class="string">'size'</span>]=house_wash[<span class="string">'square_measure'</span>].apply(<span class="keyword">lambda</span> x:float(x.rstrip(<span class="string">'平米'</span>)))</span><br><span class="line"><span class="comment">#处理房源年份数据</span></span><br><span class="line">house_wash[<span class="string">'year_built_feat'</span>]=house_wash[<span class="string">'year_built'</span>].apply(<span class="keyword">lambda</span> x:next(iter(re.findall(<span class="string">'\d+'</span>,x)), <span class="keyword">None</span>))</span><br><span class="line"><span class="comment">#处理房源单价数据</span></span><br><span class="line">house_wash[<span class="string">'unit_price'</span>]=house_wash[<span class="string">'unitprice'</span>].apply(<span class="keyword">lambda</span> x:next(iter(re.findall(<span class="string">'\d+'</span>,x)), <span class="keyword">None</span>))</span><br><span class="line"><span class="comment"># 清洗非北京的房源</span></span><br><span class="line">house_wash.dropna(subset=[<span class="string">"district_info"</span>], inplace=<span class="keyword">True</span>)</span><br><span class="line"><span class="comment"># 清洗无电梯数据的房源</span></span><br><span class="line">house_wash.dropna(subset=[<span class="string">"elevator"</span>], inplace=<span class="keyword">True</span>)</span><br><span class="line"><span class="comment"># 清洗装修状态为‘其他’的数据</span></span><br><span class="line">df = house_wash[house_wash[<span class="string">'decoration'</span>] != <span class="string">'其他'</span>]</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>处理后得到2732个样本数据，最后保留属性小区名称community、户型apartment、面积size、装修decoration、电梯elevator、地址address、关注度attention_rate、建造年份year_built_feat 、行政区域district_name、总价totalprice、单价unit_price、楼层floor、建筑类型building_type<br><img src="/2018/09/02/houseprice data analysis/handle_after.jpg"
+                        alt=""></p>
+                    <h2 id="数据分析（-探索分析-）"><a href="#数据分析（-探索分析-）" class="headerlink" title="数据分析（ 探索分析  ）"></a>数据分析（ 探索分析 ）</h2>
+                    <h3 id="北京二手房整体价格分布"><a href="#北京二手房整体价格分布" class="headerlink" title="北京二手房整体价格分布"></a>北京二手房整体价格分布</h3>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">price=house_datas[<span class="string">'unit_price'</span>]</span><br><span class="line">max_price = price.max()</span><br><span class="line">min_price = price.min()</span><br><span class="line">mean_price = price.mean()</span><br><span class="line">mode_price=price.mode()</span><br><span class="line">median_price = price.median()</span><br><span class="line"> </span><br><span class="line">print(<span class="string">"北京市二手房最高价格：%.2f元/平方米"</span> %max_price)</span><br><span class="line">print(<span class="string">"北京市二手房最低价格：%.2f元/平方米"</span> %min_price)</span><br><span class="line">print(<span class="string">"北京市二手房平均价格：%.2f元/平方米"</span> %mean_price)</span><br><span class="line">print(<span class="string">"北京市二手房中位数价格：%.2f元/平方米"</span> %median_price)</span><br><span class="line">print(<span class="string">"北京市二手房众数价格：%.2f元/平方米"</span> %mode_price)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>北京市二手房最高价格：149926.00元/平方米<br>北京市二手房最低价格：18590.00元/平方米<br>北京市二手房平均价格：67106.07元/平方米<br>北京市二手房中位数价格：62508.50元/平方米<br>北京市二手房众数价格：49505.00元/平方米<br>从统计结果上来看，北京二手房最高价与最低价格相差近13万元/平方米。房价的平均数&gt;中位数&gt;众数，呈右偏分布。接下来展示整体二手房价的分布：</p>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">#绘制房价分布直方图</span></span><br><span class="line">plt.title(<span class="string">"北京市二手房价格分析"</span>)</span><br><span class="line">plt.xlabel(<span class="string">"二手房价格 (元/平方米)"</span>)</span><br><span class="line">plt.ylabel(<span class="string">"二手房数量"</span>)</span><br><span class="line">plt.hist(price, bins=<span class="number">60</span>)</span><br><span class="line">plt.vlines(mean_price, <span class="number">0</span>, <span class="number">200</span>, color=<span class="string">'red'</span>, label=<span class="string">'平均价格'</span>, linewidth=<span class="number">1.5</span>, linestyle=<span class="string">'--'</span>)</span><br><span class="line">plt.vlines(median_price, <span class="number">0</span>, <span class="number">200</span>, color=<span class="string">'red'</span>,label=<span class="string">'中位数价格'</span>, linewidth=<span class="number">1.5</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><img src="/2018/09/02/houseprice data analysis/hist_price.jpg" alt=""><br>从房价整体分布图来看，受极大值较多的影响，数据呈右偏的正态分布。考虑到北京城区和远郊区县价格相差悬殊，接下来我们看行政区的不同对房价的影响</p>
+                    <h3 id="各行政区房价差异"><a href="#各行政区房价差异" class="headerlink" title="各行政区房价差异"></a>各行政区房价差异</h3>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">#可视化 各区域房源单价均价</span></span><br><span class="line">hf=house_datas.groupby([<span class="string">'district_name'</span>])[<span class="string">'unit_price'</span>].mean()</span><br><span class="line">house_unitprice_group_by_district =hf.astype(int)</span><br><span class="line">house_unitprice_group_by_district_df = pd.DataFrame(house_unitprice_group_by_district)</span><br><span class="line">house_unitprice_group_by_district_df.plot(kind=<span class="string">'bar'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'行政区'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'单价'</span>)</span><br><span class="line">plt.title(<span class="string">'行政区 vs 房源单价'</span>)</span><br><span class="line">plt.tight_layout()  </span><br><span class="line"><span class="keyword">for</span> x,y <span class="keyword">in</span> zip(np.arange(len(house_unitprice_group_by_district)),house_unitprice_group_by_district):</span><br><span class="line">    plt.text(x,y,y,ha=<span class="string">'center'</span>,va=<span class="string">'bottom'</span>)</span><br><span class="line">plt.savefig(<span class="string">'./pics/unitpice_by_district.png'</span>)</span><br><span class="line">plt.show()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><img src="/2018/09/02/houseprice data analysis/unitprice_by_district.jpg" alt=""><br>可以看到由于教育资源和地理位置的优势，西城均价最贵，其次是海淀、东城、朝阳。通州的房价在意料之外，通州作为北京的副中心，但均价还不到5万，可见限购政策收紧了流动性，对房价影响较大。大兴、顺义、怀柔等远郊区县价格相差不大，又以房山价格最低。接下来进一步查看各行政区内部的房价分布，通过箱形图展现：<br>
+                      <figure class="highlight python">
+                        <table>
+                          <tr>
+                            <td class="gutter">
+                              <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+                            </td>
+                            <td class="code">
+                              <pre><span class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>]  <span class="comment"># 指定默认字体</span></span><br><span class="line">plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>  <span class="comment"># 解决保存图像是负号'-'显示为方块的问题</span></span><br><span class="line">sns.set(font=<span class="string">'SimHei'</span>)</span><br><span class="line">sns.boxplot(x=<span class="string">'district_name'</span>,y=<span class="string">'unit_price'</span>,data=house_datas)</span><br><span class="line">plt.title(<span class="string">"北京市各行政区二手房价格分析(箱形图)"</span>)</span><br><span class="line">plt.xlabel(<span class="string">'行政区'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'单价（元/平方米）'</span>)</span><br><span class="line">plt.savefig(<span class="string">'./pics/box_price.jpg'</span>)</span><br><span class="line">plt.show()</span><br></pre>
+                            </td>
+                          </tr>
+                        </table>
+                      </figure>
+                    </p>
+                    <p><img src="/2018/09/02/houseprice data analysis/box_price.jpg" alt=""><br>从图中不难得出结论，西城和海淀的高价房使得北京整体房价分布呈现右偏的态势。<br>可以看到海淀、朝阳、昌平的上侧异常值较多；而西城和东城房价虽高，但分布均匀，没有异常值出现，这应该和占地面积有关，比如海淀区全区占地面积426平方公里，东城和西城是40-50平方公里，相差近10倍，所以东西城房源位置集中，又都属于核心区域，房价分布更加均匀。而海淀、朝阳、昌平都是大区，房源分布分散，海淀最高房价超过14万，最低不到6万，所以刚需家庭或有落户需求的家庭可以在海淀、朝阳的非核心区域寻找购房机会。</p>
+                    <h3 id="2000年以后建成的房源在各行政区的分布"><a href="#2000年以后建成的房源在各行政区的分布" class="headerlink" title="2000年以后建成的房源在各行政区的分布"></a>2000年以后建成的房源在各行政区的分布</h3>
+                    <p>考虑到投资房产因房子折旧带来的折价和产权剩余的时间，购房者可能会关注房子的房龄，先看一下各行政区房源数量的分布情况： </p>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">#可视化 各区域房源数量比例</span></span><br><span class="line">house_numbers_group_by_district = house_datas[<span class="string">'district_name'</span>].value_counts()</span><br><span class="line">house_numbers_group_by_district.plot(kind=<span class="string">'pie'</span>, autopct=<span class="string">'%.2f%%'</span>)</span><br><span class="line">plt.title(<span class="string">'各行政区房源数量比例'</span>)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.savefig(<span class="string">'./pics/house_numbers_pie.png'</span>)</span><br><span class="line">plt.show()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><img src="/2018/09/02/houseprice data analysis/house_numbers_pie.jpg" alt=""><br>朝阳区的房源最多，其次是昌平、海淀、丰台。<br>进一步看房龄在2000年以后的房源和房源总量的比较： </p>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">house_new=house_datas[<span class="string">'district_name'</span>][house_datas[<span class="string">'year_built_feat'</span>]&gt;=<span class="number">2000</span>].value_counts()</span><br><span class="line">house_numbers_group_by_district = house_datas[<span class="string">'district_name'</span>].value_counts()</span><br><span class="line">plt.xlabel(<span class="string">'行政区'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'2000年以后的房源数量'</span>)</span><br><span class="line">plt.title(<span class="string">'2000年以后的房源分布'</span>)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">total_width,n=<span class="number">0.8</span>,<span class="number">2</span></span><br><span class="line">width=total_width/n</span><br><span class="line">x=list(range(len(house_new)))</span><br><span class="line">plt.bar(x, house_numbers_group_by_district, width=width, label=<span class="string">'total'</span>,fc = <span class="string">'y'</span>)</span><br><span class="line"><span class="keyword">for</span> a,b <span class="keyword">in</span> zip(np.arange(len(house_numbers_group_by_district)),house_numbers_group_by_district):</span><br><span class="line">    plt.text(a,b,b,ha=<span class="string">'center'</span>,va=<span class="string">'bottom'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(x)):</span><br><span class="line">     x[i] = x[i] + width</span><br><span class="line">plt.bar(x, house_new, width=width, label=<span class="string">'new'</span>,tick_label=house_new.index,fc = <span class="string">'g'</span>)</span><br><span class="line"><span class="keyword">for</span> a,b <span class="keyword">in</span> zip(np.arange(len(house_new))+width,house_new):</span><br><span class="line">    plt.text(a,b,b,ha=<span class="string">'center'</span>,va=<span class="string">'bottom'</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.savefig(<span class="string">'./pics/house_new_numbers.png'</span>)</span><br><span class="line">plt.show()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><img src="/2018/09/02/houseprice data analysis/house_new_numbers.jpg" alt=""><br>房龄在2000年以后的房源依然是朝阳区最多，从比例来看，远郊区县大部分房源都是新房，西城区大部分是2000年以前的老房，但西城房价是所有城区最高，与需求完全不对称的供给，加上全北京最优质的教育、医疗成就了西城“高价老破小”的神话。<br>对比朝阳和海淀，海淀新房老房的数量都小于朝阳，且海淀拥有更好的教育资源和去哪都近的区位优势，为海淀房价提供了更好的支撑性。
+                    </p>
+                    <h3 id="房龄对房价的影响"><a href="#房龄对房价的影响" class="headerlink" title="房龄对房价的影响"></a>房龄对房价的影响</h3>
+                    <p>考虑各行政区的房价差异较大，房龄的影响也要按区分析，取海淀和西城的数据来分析：<br>
+                      <figure class="highlight python">
+                        <table>
+                          <tr>
+                            <td class="gutter">
+                              <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+                            </td>
+                            <td class="code">
+                              <pre><span class="line">house_haidian=house_datas[house_datas[<span class="string">'district_name'</span>]==<span class="string">'海淀'</span>]</span><br><span class="line">plt.scatter(x=<span class="string">"year_built_feat"</span>, y=<span class="string">"unit_price"</span>,data=house_haidian)</span><br><span class="line">plt.title(<span class="string">'海淀区房龄与单价散点图'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'建造年份（年）'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'单价（元/平方米）'</span>)</span><br><span class="line">plt.tight_layout() </span><br><span class="line">plt.savefig(<span class="string">'./pics/house_haidian.jpg'</span>)</span><br><span class="line">plt.show()</span><br></pre>
+                            </td>
+                          </tr>
+                        </table>
+                      </figure>
+                    </p>
+                    <p><img src="/2018/09/02/houseprice data analysis/house_haidian.jpg" alt=""><br><img src="/2018/09/02/houseprice data analysis/house_xicheng.jpg" alt=""><br>结果比较意外，房龄的因素对房价影响不大，这说明在有限的优质资源面前，需求和供给的严重不平衡削弱了房龄对价格的影响。</p>
+                    <h3 id="电梯对房价的影响"><a href="#电梯对房价的影响" class="headerlink" title="电梯对房价的影响"></a>电梯对房价的影响</h3>
+                    <figure class="highlight python">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">#可视化 电梯对房价的影响</span></span><br><span class="line">sns.barplot(x=<span class="string">"district_name"</span>, y=<span class="string">"unit_price"</span>, hue=<span class="string">'elevator'</span>, data=house_datas)</span><br><span class="line">plt.xlabel(<span class="string">'行政区'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'单价（元/平方米）'</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.savefig(<span class="string">'./pics/price_elevator.jpg'</span>)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><img src="/2018/09/02/houseprice data analysis/price_elevator.jpg" alt=""> </p>
+                    <p>除了西城，有电梯的房价都高于无电梯房屋。 </p>
+                    <h3 id="最受关注的房源有哪些特点"><a href="#最受关注的房源有哪些特点" class="headerlink" title="最受关注的房源有哪些特点"></a>最受关注的房源有哪些特点</h3>
+                    <p>取关注度排名前100的房源进行分析，先看电梯、房型对关注度的影响：<br>
+                      <figure class="highlight python">
+                        <table>
+                          <tr>
+                            <td class="gutter">
+                              <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+                            </td>
+                            <td class="code">
+                              <pre><span class="line">house_attention=house_analysis.head(<span class="number">100</span>)</span><br><span class="line">sns.swarmplot(x=<span class="string">"elevator"</span>, y=<span class="string">"attention_rate_feat"</span>, data=house_attention, hue=<span class="string">'apartment'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'关注度'</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.savefig(<span class="string">'./pics/attention_apartment.jpg'</span>)</span><br></pre>
+                            </td>
+                          </tr>
+                        </table>
+                      </figure>
+                    </p>
+                    <p><img src="/2018/09/02/houseprice data analysis/attention_apartment.jpg" alt=""><br>从统计结果可以得出，关注度最多的房型是2室1厅，但对有无电梯并不敏感。<br>同样的方法对其他属性进行分析，得到<br><img src="/2018/09/02/houseprice data analysis/attention_buildingtype.jpg" alt=""><br><img
+                        src="/2018/09/02/houseprice data analysis/attention_size.jpg" alt=""></p>
+                    <p>综上分析，人们对户型为2室1厅、面积在100平方米以下、楼型是板楼的房源关注度最多。 </p>
+                    <h3 id="首付100万以内能买到哪些小区"><a href="#首付100万以内能买到哪些小区" class="headerlink" title="首付100万以内能买到哪些小区"></a>首付100万以内能买到哪些小区</h3>
+                    <p>以公积金贷款为例，统计100万以内的首付能买到哪些房源： </p>
+                    <pre><code class="python">house_limit=house_datas[(house_datas[<span class="string">'totalprice'</span>]<span class="number">-120</span>)&lt;=<span class="number">100</span>]
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+sns.barplot(y=<span class="string">'community'</span>,x=<span class="string">'unit_price'</span>,data=house_limit,hue=<span class="string">'district_name'</span>)
+plt.xlabel(<span class="string">'单价(元/平方米)'</span>)
+plt.ylabel(<span class="string">''</span>)
+plt.legend(loc=<span class="string">'upper right'</span>)
+plt.savefig(<span class="string">'./pics/price_limit.jpg'</span>)
+</code></pre>
+                    <p><img src="/2018/09/02/houseprice data analysis/price_limit.jpg" alt=""><br>结果并不乐观，100万只能买到丰台一个房源，远郊区县也仅有8个房源。 </p>
+                    <h2 id="房屋价格预测"><a href="#房屋价格预测" class="headerlink" title="房屋价格预测"></a>房屋价格预测</h2>
+                    <h3 id="绘制相关系数矩阵，选取影响房价的特征"><a href="#绘制相关系数矩阵，选取影响房价的特征" class="headerlink" title="绘制相关系数矩阵，选取影响房价的特征"></a>绘制相关系数矩阵，选取影响房价的特征</h3>
+                    <pre><code class="python"> <span class="comment">#计算变量之间的相关系数矩阵   </span>
+correlations =house_var_relation.corr()
+sns.heatmap(correlations,cmap=<span class="string">"YlGnBu"</span>)
+</code></pre>
+                    <p><img src="/2018/09/02/houseprice data analysis/heatmap.jpg" alt=""><br>从图中可以看出，户型和面积、电梯和房龄相关性较强，如前面分析，房价和房龄相关系数很小。所以最后选取特征户型、面积、电梯、装修、行政区来预测房价。</p>
+                    <h3 id="建立机器学习模型预测房价"><a href="#建立机器学习模型预测房价" class="headerlink" title="建立机器学习模型预测房价"></a>建立机器学习模型预测房价</h3>
+                    <p>采用机器学习方法综合考虑多个因素对房价的影响，并建立预测模型。当前数据有5个特征（房屋面积、所在行政区、户型、电梯和装修）和1个标记（房价）。因为预测目标——房价是一个连续变量，因此本项目中的价格预测是一个回归问题, 常见的机器学习回归模型有线性回归、岭回归、支持向量机和随机森林等。本项目中选取三类模型（线性回归、岭回归、支持向量机）进行房价预测。 </p>
+                    <h4 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h4>
+                    <pre><code class="python"><span class="function"><span class="keyword">def</span> <span class="title">house_preprocessing</span><span class="params">()</span>:</span>
+    df = pd.read_csv(<span class="string">"./house_var_relation.csv"</span>)
+    <span class="comment">#得到标注</span>
+    label=df[<span class="string">'unit_price'</span>]
+    df=df.drop(<span class="string">'unit_price'</span>,axis=<span class="number">1</span>)
+    <span class="comment">#特征处理,数据min-max归一化</span>
+    column_lst = [<span class="string">'size'</span>, <span class="string">'elevator_code'</span>, <span class="string">'apartment_code'</span>,<span class="string">'decoration_code'</span>]
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(column_lst)):
+        df[column_lst[i]]=\
+            MinMaxScaler().fit_transform(df[column_lst[i]].reshape(<span class="number">-1</span>, <span class="number">1</span>)).reshape(<span class="number">1</span>, <span class="number">-1</span>)[<span class="number">0</span>]
+    <span class="comment"># 使用one-hot编码修改特征"district"</span>
+    df = pd.get_dummies(df, columns=[<span class="string">'district_name'</span>])
+    <span class="keyword">return</span> df,label
+
+</code></pre>
+                    <p>把单价unit_price设为标注label，行政区采用one-hot编码，面积size等特征使用min-max归一化</p>
+                    <h4 id="参数调优"><a href="#参数调优" class="headerlink" title="参数调优"></a>参数调优</h4>
+                    <p>对于岭回归，使用GridSearchCV网格搜索的方式对alpha参数进行调优 </p>
+                    <pre><code class="python">param_grid={<span class="string">'alpha'</span>:[i <span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>,<span class="number">1</span>,<span class="number">0.1</span>)]}
+    rid=Ridge()
+    grid_search=GridSearchCV(rid,param_grid,verbose=<span class="number">1</span>)
+    grid_search.fit(X_tt,Y_tt)
+    print(grid_search.best_score_)
+    print(grid_search.best_estimator_)
+</code></pre>
+                    <p>得到best_score0.55,此时alpha=0.1</p>
+                    <h4 id="模型训练与评价"><a href="#模型训练与评价" class="headerlink" title="模型训练与评价"></a>模型训练与评价</h4>
+                    <pre><code class="python"><span class="function"><span class="keyword">def</span> <span class="title">house_modeling</span><span class="params">(features,label)</span>:</span>
+    <span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+    f_v=features.values
+    f_names=features.columns.values
+    l_v=label.values
+    <span class="comment">#样本分为训练集，验证集，测试集</span>
+    X_tt,X_validation,Y_tt,Y_validation=train_test_split(f_v,l_v,test_size=<span class="number">0.2</span>)
+    X_train,X_test,Y_train,Y_test=train_test_split(X_tt,Y_tt,test_size=<span class="number">0.2</span>)
+
+    <span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> r2_score
+    <span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVR
+    <span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression,Ridge
+    <span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor
+
+    models=[]
+    models.append((<span class="string">"LinearRegression"</span>,LinearRegression()))
+    models.append((<span class="string">"RidgeRegression"</span>,Ridge(alpha=<span class="number">0.1</span>)))
+    models.append((<span class="string">"SVR Regression"</span>, SVR(C=<span class="number">1000</span>,kernel=<span class="string">'linear'</span>)))
+
+    <span class="comment">#输出各model在训练集、验证集、测试集的R2</span>
+    <span class="keyword">for</span> clf_name,clf <span class="keyword">in</span> models:
+        clf.fit(X_train,Y_train)
+        xy_lst=[(X_train,Y_train),(X_validation,Y_validation),(X_test,Y_test)]
+        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(xy_lst)):
+            X_part=xy_lst[i][<span class="number">0</span>]
+            Y_part=xy_lst[i][<span class="number">1</span>]
+            Y_pred=clf.predict(X_part)
+            print(i)
+            print(clf_name,<span class="string">"R2:"</span>,r2_score(Y_part,Y_pred))
+</code></pre>
+                    <p>三种模型比较结果如下： </p>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th></th>
+                          <th>线性回归</th>
+                          <th>岭回归</th>
+                          <th>SVR</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td>训练集</td>
+                          <td>0.56</td>
+                          <td>0.56</td>
+                          <td>0.47</td>
+                        </tr>
+                        <tr>
+                          <td>R方得分</td>
+                          <td>验证集</td>
+                          <td>0.55</td>
+                          <td>0.53</td>
+                          <td>0.42</td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>测试集</td>
+                          <td>0.55</td>
+                          <td>0.57</td>
+                          <td>0.42</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p>R方得分越高，模型的预测能力越强。由此看出线性回归和岭回归差别不大，SVR的预测能力最弱，但通过调参和交叉验证的方法可以进一步训练模型，提高预测能力。<br>岭回归预测效果：<br><img src="/2018/09/02/houseprice data analysis/RidgeRegression%E9%A2%84%E6%B5%8B%E6%95%88%E6%9E%9C.jpg" alt=""><br>可以看到岭回归在低房价区间预测效果较好，但随着房价超过75000/平方米后预测能力减弱。<br>项目小结：<br>本项目根据链家网爬取的数据，对影响房价和关注度的因素进行了简单数据分析。项目还有很多可以改进的地方，如可以根据房屋的具体地理位置（离地铁或商圈的距离）深入分析对房价的影响，对机器学习模型进行调参和融合进一步提高预测能力，从而为购房者提供建设性意见。
+                    </p>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+                    <div class="post-tags">
+
+                      <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+
+                      <a href="/tags/数据分析/" rel="tag"># 数据分析</a>
+
+                      <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2018/09/01/stock market prediction/" rel="next" title="根据新闻内容预测股市动向">
+                          <i class="fa fa-chevron-left"></i> 根据新闻内容预测股市动向
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2018/12/18/qhld/" rel="prev" title="期货联动">
+                          期货联动 <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+
+            <div id="gitment-container"></div>
+
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">迟晓雪</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">7</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">3</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">11</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#项目目的："><span class="nav-number">1.</span> <span class="nav-text">项目目的：</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#技术和工具"><span class="nav-number">2.</span> <span class="nav-text">技术和工具</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">3.</span> <span class="nav-text">准备工作</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#数据获取"><span class="nav-number">3.1.</span> <span class="nav-text">数据获取</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#数据清洗"><span class="nav-number">3.2.</span> <span class="nav-text">数据清洗</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#数据分析（-探索分析-）"><span class="nav-number">4.</span> <span class="nav-text">数据分析（ 探索分析 ）</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#北京二手房整体价格分布"><span class="nav-number">4.1.</span> <span class="nav-text">北京二手房整体价格分布</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#各行政区房价差异"><span class="nav-number">4.2.</span> <span class="nav-text">各行政区房价差异</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#2000年以后建成的房源在各行政区的分布"><span class="nav-number">4.3.</span> <span class="nav-text">2000年以后建成的房源在各行政区的分布</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#房龄对房价的影响"><span class="nav-number">4.4.</span> <span class="nav-text">房龄对房价的影响</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#电梯对房价的影响"><span class="nav-number">4.5.</span> <span class="nav-text">电梯对房价的影响</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#最受关注的房源有哪些特点"><span class="nav-number">4.6.</span> <span class="nav-text">最受关注的房源有哪些特点</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#首付100万以内能买到哪些小区"><span class="nav-number">4.7.</span> <span class="nav-text">首付100万以内能买到哪些小区</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#房屋价格预测"><span class="nav-number">5.</span> <span class="nav-text">房屋价格预测</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#绘制相关系数矩阵，选取影响房价的特征"><span class="nav-number">5.1.</span> <span class="nav-text">绘制相关系数矩阵，选取影响房价的特征</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#建立机器学习模型预测房价"><span class="nav-number">5.2.</span> <span class="nav-text">建立机器学习模型预测房价</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#数据预处理"><span class="nav-number">5.2.1.</span> <span class="nav-text">数据预处理</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#参数调优"><span class="nav-number">5.2.2.</span> <span class="nav-text">参数调优</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#模型训练与评价"><span class="nav-number">5.2.3.</span> <span class="nav-text">模型训练与评价</span></a></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">迟晓雪</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+  <!-- LOCAL: You can save these files to your site and update links -->
+
+
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitmint.browser.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css">
+  <!-- END LOCAL -->
+
+  <script>
+    function renderGitment() {
+      var gitment = new Gitmint({
+        id: window.location.pathname,
+        owner: 'chixiaoxue',
+        repo: 'chixiaoxue.github.io',
+
+        lang: '' || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+
+        oauth: {
+
+
+          client_secret: '2480c3040304fce57f2b75c578619ba876965655',
+
+          client_id: 'e7921d1999a9ee11d0e1'
+        }
+      });
+      gitment.render('gitment-container');
+    }
+
+
+    renderGitment();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
