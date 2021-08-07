@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="算法分类 RTMP⼤前提下，有两种升降码率策略：          上传⽂件探测⽹络状态反推发送码率     1.1 优点：量化数据为依据，预判相对准确。      1.2 缺点：      ​ 1.2.1 “上传⽂件探测”与“较窄带宽”是悖论；     ​ 1.2.2 合作的CDN⼚商是否⽀持这样做。            事后诸葛亮，根据统计数据来校正      2.1 优点：没有“上传⽂件探">
+  <meta name="keywords" content="音视频">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="视频直播码率自适应策略">
+  <meta property="og:url" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/index.html">
+  <meta property="og:site_name" content="雨生百谷">
+  <meta property="og:description" content="算法分类 RTMP⼤前提下，有两种升降码率策略：          上传⽂件探测⽹络状态反推发送码率     1.1 优点：量化数据为依据，预判相对准确。      1.2 缺点：      ​ 1.2.1 “上传⽂件探测”与“较窄带宽”是悖论；     ​ 1.2.2 合作的CDN⼚商是否⽀持这样做。            事后诸葛亮，根据统计数据来校正      2.1 优点：没有“上传⽂件探">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807232046660.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807232739623.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807232811983.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807233756948.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807233940760.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807234204853.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807235947586.png">
+  <meta property="og:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210808000730141.png">
+  <meta property="og:updated_time" content="2021-08-07T16:17:44.060Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="视频直播码率自适应策略">
+  <meta name="twitter:description" content="算法分类 RTMP⼤前提下，有两种升降码率策略：          上传⽂件探测⽹络状态反推发送码率     1.1 优点：量化数据为依据，预判相对准确。      1.2 缺点：      ​ 1.2.1 “上传⽂件探测”与“较窄带宽”是悖论；     ​ 1.2.2 合作的CDN⼚商是否⽀持这样做。            事后诸葛亮，根据统计数据来校正      2.1 优点：没有“上传⽂件探">
+  <meta name="twitter:image" content="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/image-20210807232046660.png">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>视频直播码率自适应策略 | 雨生百谷</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">雨生百谷</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://zluyang.github.io/2020/04/19/视频直播码率自适应策略/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="六郎">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="雨生百谷">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">视频直播码率自适应策略
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2020-04-19 16:44:02" itemprop="dateCreated datePublished" datetime="2020-04-19T16:44:02+08:00">2020-04-19</time>
+
+
+
+
+
+
+
+                        <span class="post-meta-divider">|</span>
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-check-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Edited on</span>
+
+                        <time title="Modified: 2021-08-08 00:17:44" itemprop="dateModified" datetime="2021-08-08T00:17:44+08:00">2021-08-08</time>
+
+
+                      </span>
+
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2020/04/19/视频直播码率自适应策略/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count valine-comment-count" data-xid="/2020/04/19/视频直播码率自适应策略/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2020/04/19/视频直播码率自适应策略/" class="leancloud_visitors" data-flag-title="视频直播码率自适应策略">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <h2 id="算法分类"><a href="#算法分类" class="headerlink" title="算法分类"></a>算法分类</h2>
+                    <p>RTMP⼤前提下，有两种升降码率策略： </p>
+                    <ol>
+                      <li>
+                        <p>上传⽂件探测⽹络状态反推发送码率</p>
+                        <p>1.1 优点：量化数据为依据，预判相对准确。 </p>
+                        <p>1.2 缺点： </p>
+                        <p>​ 1.2.1 “上传⽂件探测”与“较窄带宽”是悖论；</p>
+                        <p>​ 1.2.2 合作的CDN⼚商是否⽀持这样做。 </p>
+                      </li>
+                      <li>
+                        <p>事后诸葛亮，根据统计数据来校正 </p>
+                        <p>2.1 优点：没有“上传⽂件探测”的缺点（1.2.1 &amp; 1.2.2） </p>
+                        <p>2.2 缺点： </p>
+                        <p>​ 2.2.1 如果提供决策的“度量”不够准确、没有完整的度量体系，不好做精准的量化控制。 2.2.2 反射弧太⻓：⼀路上各种buffer+各种延迟导致调整时机滞后，加剧主播丢帧，观众卡顿</p>
+                      </li>
+                    </ol>
+                    <h2 id="度量选取"><a href="#度量选取" class="headerlink" title="度量选取"></a>度量选取</h2>
+                    <h3 id="可用的度量举例"><a href="#可用的度量举例" class="headerlink" title="可用的度量举例"></a>可用的度量举例</h3>
+                    <ul>
+                      <li>
+                        <p>queuestate(已编码帧缓冲区饱和度)</p>
+                        <p> 此参数与⽹络状况相关性正确；但不能及时反映⽹ 络状态变化；量化区间0-1的切分点不好把握，升降幅 度⽆法精确度量</p>
+                        <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807232046660.png" alt="image-20210807232046660"></p>
+                      </li>
+                      <li>
+                        <p>SendBitrate </p>
+                        <p>可⽤性：此度量是发送的Packet ⼤⼩相关的，由于发送 不同类型⾳视频帧的⼤⼩参差不⻬，mux算法不可能完美 切割AVPacket⼤⼩，再⽐如同样P帧，运动帧和⾮运动帧 ⼤⼩差距好⼤的，导致这个值上下波动极不稳定规律不明 显；⽽经过平滑处理⼜会⼀定程度失真，会出现错过调整 时机、或调整不够，不利于精确控制。</p>
+                        <p>由于相⽐queuestate更接近⽹络层，从sendBitrate数量级 和相对差值粗略判定⽹络状况倒是可以，想精细会笔比较难</p>
+                      </li>
+                    </ul>
+                    <h3 id="度量选取原则"><a href="#度量选取原则" class="headerlink" title="度量选取原则"></a>度量选取原则</h3>
+                    <ul>
+                      <li>
+                        <p>More common sense，More make sense，常识性度量是放之四海皆准的，也便 于留出⾜够⼤的量化空间，便于细粒度操控，想想为啥汽⻋变速箱档位越多越⽜* 越省油。</p>
+                      </li>
+                      <li>
+                        <p>直⾯问题本质：算法⽬标是⾯对⼤样本的⽹络状况，⽤算法熨平上⾏带宽波动和 ⽹络抖动、延迟、丢包等恶劣情况，我们能在他允许范围内顺利推流不丢帧，播 放器流畅播放不卡顿；直播项⽬⼤的设计模式就是从端到端的⽣产消费链条，消 费者的反馈构成⽣产者调整参数的依据，因为我们当前任务是根据⽹络这个消费 者的反馈去调⽣产者编码器的参数，所以理论上越靠近⽹络传输层（数据传输 层）的度量参数越接近真相</p>
+                      </li>
+                      <li>
+                        <p>度量尽量独⽴于被操控对象，因为被操控对象数据也可能⼀定程度失真，相当于引⼊更多不可控因素；⽐如编码码率与发送码率关系⽆法准确判断⽹络状况，也 不够CommonSense，我们要独⽴地控制编码器，所以离编码器越远越好。</p>
+                      </li>
+                    </ul>
+                    <h3 id="该到哪里选"><a href="#该到哪里选" class="headerlink" title="该到哪里选"></a>该到哪里选</h3>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807232739623.png" alt="image-20210807232739623"></p>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807232811983.png" alt="image-20210807232811983"></p>
+                    <p>基于ffmpeg的播放器在⽹络不好情况下会出现菊花，这种情况 下av_read_frame()会阻塞在传输层的buffer,⽽阻塞的时间⼏乎 能完全反应当时的⽹络状况。</p>
+                    <h3 id="推测"><a href="#推测" class="headerlink" title="推测"></a>推测</h3>
+                    <p> <code>/ Write a packet to an output media file ensuring correct interleaving. * * This function will buffer the packets internally as needed to make sure the * packets in the output file are properly interleaved in the order
+                        of * increasing dts.
+                        Callers doing their own interleaving should call * av_write_frame() instead of this function. */</code> </p>
+                    <p><code>int av_interleaved_write_frame(AVFormatContext *s, AVPacket *pkt);</code></p>
+                    <ul>
+                      <li>
+                        <p>推测对应的ffmpeg写操作在⽹络不好时候也会阻塞传输层的buffer，⽽⼀个AVPacket 发送成功所⽤时间⼏乎就是阻塞write_buffer的时间，下⾯统⼀称呼这个时间为 writeTime </p>
+                      </li>
+                      <li>
+                        <p>根据writeTime不同时⻓区间表来判定码率是升是降，升多少降多少不再是固定常量或 固定⽐例，由于writeTime的量化空间较⼤，区间可以切分的⾜够细，以便得出⾜够精 细的升降策略</p>
+                      </li>
+                    </ul>
+                    <h2 id="算法简介"><a href="#算法简介" class="headerlink" title="算法简介"></a>算法简介</h2>
+                    <h3 id="档位切割"><a href="#档位切割" class="headerlink" title="档位切割"></a>档位切割</h3>
+                    <ul>
+                      <li>为了充分利⽤发送时⻓的量化空间，我们要切割出 够细的档位，⽐如以30kbps为步⻓、最低码率 300kbps、最⾼码率1000kbps，改变这些参数可 以切出23个甚⾄更多档位。 </li>
+                      <li>代码抽象出档位概念，有助于后续扩展，⽐如为了 让清晰度保持相对稳定，变化平滑，可以不同档位 映射不同的FPS，⽽不是只分15、20、24三档。 </li>
+                    </ul>
+                    <h3 id="快降"><a href="#快降" class="headerlink" title="快降"></a>快降</h3>
+                    <h4 id="起点低处理："><a href="#起点低处理：" class="headerlink" title="起点低处理："></a>起点低处理：</h4>
+                    <p>最开始9秒内，如果预设码率远⾼于当前⽹络上⾏带 宽，⽤“伪⼆分查找法”估算出⼀个最保守的码率，防⽌输在起跑线 上。 </p>
+                    <h4 id="突发处理："><a href="#突发处理：" class="headerlink" title="突发处理："></a>突发处理：</h4>
+                    <p>突发状况⽐如突然出现1000ms+的发送时间，会紧急降档 位，降到0.9倍当前档位码率对应的码率。</p>
+                    <h4 id="正常情况："><a href="#正常情况：" class="headerlink" title="正常情况："></a>正常情况：</h4>
+                    <p>12秒为统计周期，write_time越⻓（⽐如1000ms以上）、 在当前档位停留时间越短、说明⽹络条件越差，需要降低相应幅度。</p>
+                    <h4 id="豁免："><a href="#豁免：" class="headerlink" title="豁免："></a>豁免：</h4>
+                    <p>升⾼再降回来的档位在未来12秒统计周期如果还有下降趋势， 会有⼀次“豁免”机会，防⽌由于编码器反应过慢导致的矫枉过正。</p>
+                    <h3 id="慢升"><a href="#慢升" class="headerlink" title="慢升"></a>慢升</h3>
+                    <ul>
+                      <li>
+                        <p>升只允许升⼀档，⼀档30kbps，最快12秒升⼀档</p>
+                      </li>
+                      <li>
+                        <p>⽤升档“恐惧度(fear)”和“内疚度(guilty)”来限制升码 率频率，降档会增加⽬标档位恐惧度，如果升档⼜ 降回来增加升档前档位和升档后档位的内疚度，内 疚是有原则的内疚，事不过三，内疚度超过三会被 监禁20分钟，不得升档超过该档位，⽽且此时的恐 惧度与“前科内疚度”正相关，提醒档位降低进攻欲 望。</p>
+                        <ul>
+                          <li>fear&amp;guilty fear：fear初始为5，减1条件是这个12秒统计周期内 所有发送时间都在30ms范围内，减到0才构成升码率 条件；如果不是升了⼜降，A码率降到B码率则增加B 码率的fear，降幅与writeTime正相关，与待在A码率 的时⻓负相关；如果是升了⼜降，发起升动作的档位 恐惧度与⾃身内疚度严重正相关。</li>
+                          <li>guilty：guilty初始0，从A码率升到B，⼜降到A，就增 加A和B的guilty，这时A和B的fear更新为： fear = fear *(1+guilty) </li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807233756948.png" alt="image-20210807233756948"></p>
+                    <p> VideoToolBox⻓反射弧 ⼀定有buffer可能对我们来说还不⼩，但对外没暴露清空buffer⽅法，导致 反应迟钝，设置的码率半天才⽣效，导致⽅案针对性调节，甚⾄出现“豁免权” </p>
+                    <ul>
+                      <li>设置iOS硬编码器码率 </li>
+                    </ul>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807233940760.png" alt="image-20210807233940760"></p>
+                    <ul>
+                      <li>设置android硬编码器码率, 绳⻓1⽶,狗很听话</li>
+                    </ul>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807234204853.png" alt="image-20210807234204853"></p>
+                    <h2 id="效果检验"><a href="#效果检验" class="headerlink" title="效果检验"></a>效果检验</h2>
+                    <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210807235947586.png" alt="image-20210807235947586"></p>
+                    <h3 id="测试条件："><a href="#测试条件：" class="headerlink" title="测试条件："></a>测试条件：</h3>
+                    <ul>
+                      <li>Out BandWidth：350kbps </li>
+                      <li>Out Delay：100ms </li>
+                      <li>In BandWidth:780kbps </li>
+                      <li>InDelay:100ms Code Time</li>
+                    </ul>
+                    <h3 id="测试⽅法说明"><a href="#测试⽅法说明" class="headerlink" title="测试⽅法说明"></a>测试⽅法说明</h3>
+                    <h4 id="调⽹络参数"><a href="#调⽹络参数" class="headerlink" title="调⽹络参数"></a>调⽹络参数</h4>
+                    <p> 调节代理热点、⾃家路由器 （如⼩⽶路由器）、⼿机⾃ 带开发者模式的 OutBandWidth、 OutDelay、OutPacketLoss </p>
+                    <h4 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h4>
+                    <ul>
+                      <li>
+                        <p>照着秒表或⾃家挂钟，在观 看端可同时评估清晰度、流畅度、延迟情况</p>
+                      </li>
+                      <li>
+                        <p>可以加码，推流播着⼩幸运，播放端戴⽿机听</p>
+                        <p><img src="/2020/04/19/视频直播码率自适应策略/image-20210808000730141.png" alt="image-20210808000730141"></p>
+                      </li>
+                    </ul>
+                    <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+                    <ul>
+                      <li>
+                        <p>由于主播端⽹络样本庞⼤、不确定性⾼，算法与之博弈不可能赢， 跟根据数据统计结果不断改进后验概率，也能提⾼胜率，战胜不确定性。</p>
+                      </li>
+                      <li>
+                        <p>恶劣⽹络环境下，能够永远低于限制带宽1-2个⼩档位就是完胜，保 留⾜够的安全边界，以主播不丢帧、观众不卡顿为边界，不进攻最 后⼀个档位，把最后⼀个档位留给⽹络抖动。</p>
+                      </li>
+                      <li>
+                        <p>直⾯问题本质，选取常识性度量作为判断依据会提⾼决策效率和准确度；注意边际效应递减，不要矫枉过正。 </p>
+                      </li>
+                      <li>
+                        <p>Code⾯向对象，结构清晰，便于扩展，便于阅读</p>
+                      </li>
+                    </ul>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+                    <div class="post-tags">
+
+                      <a href="/tags/音视频/" rel="tag"># 音视频</a>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2018/07/20/《非暴力沟通》读书笔记/" rel="next" title="《非暴力沟通本》读书笔记">
+                          <i class="fa fa-chevron-left"></i> 《非暴力沟通本》读书笔记
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2020/06/23/LeetCode 1117 H2O-生成/" rel="prev" title="LeetCode 1117 「H2O 生成」">
+                          LeetCode 1117 「H2O 生成」 <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">六郎</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">14</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">3</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">16</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#算法分类"><span class="nav-number">1.</span> <span class="nav-text">算法分类</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#度量选取"><span class="nav-number">2.</span> <span class="nav-text">度量选取</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#可用的度量举例"><span class="nav-number">2.1.</span> <span class="nav-text">可用的度量举例</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#度量选取原则"><span class="nav-number">2.2.</span> <span class="nav-text">度量选取原则</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#该到哪里选"><span class="nav-number">2.3.</span> <span class="nav-text">该到哪里选</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#推测"><span class="nav-number">2.4.</span> <span class="nav-text">推测</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#算法简介"><span class="nav-number">3.</span> <span class="nav-text">算法简介</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#档位切割"><span class="nav-number">3.1.</span> <span class="nav-text">档位切割</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#快降"><span class="nav-number">3.2.</span> <span class="nav-text">快降</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#起点低处理："><span class="nav-number">3.2.1.</span> <span class="nav-text">起点低处理：</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#突发处理："><span class="nav-number">3.2.2.</span> <span class="nav-text">突发处理：</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#正常情况："><span class="nav-number">3.2.3.</span> <span class="nav-text">正常情况：</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#豁免："><span class="nav-number">3.2.4.</span> <span class="nav-text">豁免：</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#慢升"><span class="nav-number">3.3.</span> <span class="nav-text">慢升</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#踩过的坑"><span class="nav-number">4.</span> <span class="nav-text">踩过的坑</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#效果检验"><span class="nav-number">5.</span> <span class="nav-text">效果检验</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#测试条件："><span class="nav-number">5.1.</span> <span class="nav-text">测试条件：</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#测试⽅法说明"><span class="nav-number">5.2.</span> <span class="nav-text">测试⽅法说明</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#调⽹络参数"><span class="nav-number">5.2.1.</span> <span class="nav-text">调⽹络参数</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#测试方法"><span class="nav-number">5.2.2.</span> <span class="nav-text">测试方法</span></a></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">六郎</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
