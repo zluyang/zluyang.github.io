@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="带Alpha的图⽚片如PNG⼴广泛应⽤用在设计上，⽐比如下图透明背景的树和城市背 景的结合； ⽽而Alpha通道视频并不常见，Apple ProRes4444的超⾼高码率决定其只适合⽣产端 编辑，不适合传输； 苹果17年年推出了了HEIF图像编码和HEVC视频编码，今年年 iOS 13带来了了HEIFS(序列 帧动图)和支持AlphaChannel的HEVC编码器  ⽹上查到的⽬目前⽀支持Alph">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="WWDC2019-Session-506-HEVC-Video-With-Alpha">
+  <meta property="og:url" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/index.html">
+  <meta property="og:site_name" content="雨生百谷">
+  <meta property="og:description" content="带Alpha的图⽚片如PNG⼴广泛应⽤用在设计上，⽐比如下图透明背景的树和城市背 景的结合； ⽽而Alpha通道视频并不常见，Apple ProRes4444的超⾼高码率决定其只适合⽣产端 编辑，不适合传输； 苹果17年年推出了了HEIF图像编码和HEVC视频编码，今年年 iOS 13带来了了HEIFS(序列 帧动图)和支持AlphaChannel的HEVC编码器  ⽹上查到的⽬目前⽀支持Alph">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808063929696.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808063940130.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064115939.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064130203.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064249502.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064322931.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064333169.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065547446.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065608069.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065640448.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065715399.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065745375.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065804445.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065823478.png">
+  <meta property="og:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065841237.png">
+  <meta property="og:updated_time" content="2021-08-07T23:09:32.531Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="WWDC2019-Session-506-HEVC-Video-With-Alpha">
+  <meta name="twitter:description" content="带Alpha的图⽚片如PNG⼴广泛应⽤用在设计上，⽐比如下图透明背景的树和城市背 景的结合； ⽽而Alpha通道视频并不常见，Apple ProRes4444的超⾼高码率决定其只适合⽣产端 编辑，不适合传输； 苹果17年年推出了了HEIF图像编码和HEVC视频编码，今年年 iOS 13带来了了HEIFS(序列 帧动图)和支持AlphaChannel的HEVC编码器  ⽹上查到的⽬目前⽀支持Alph">
+  <meta name="twitter:image" content="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808063929696.png">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>WWDC2019-Session-506-HEVC-Video-With-Alpha | 雨生百谷</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">雨生百谷</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://zluyang.github.io/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="六郎">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="雨生百谷">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">WWDC2019-Session-506-HEVC-Video-With-Alpha
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2019-06-08 06:36:06" itemprop="dateCreated datePublished" datetime="2019-06-08T06:36:06+08:00">2019-06-08</time>
+
+
+
+
+
+
+
+                        <span class="post-meta-divider">|</span>
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-check-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Edited on</span>
+
+                        <time title="Modified: 2021-08-08 07:09:32" itemprop="dateModified" datetime="2021-08-08T07:09:32+08:00">2021-08-08</time>
+
+
+                      </span>
+
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count valine-comment-count" data-xid="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/" class="leancloud_visitors" data-flag-title="WWDC2019-Session-506-HEVC-Video-With-Alpha">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <p>带Alpha的图⽚片如PNG⼴广泛应⽤用在设计上，⽐比如下图透明背景的树和城市背</p>
+                    <p>景的结合；</p>
+                    <p>⽽而Alpha通道视频并不常见，Apple ProRes4444的超⾼高码率决定其只适合⽣产端</p>
+                    <p>编辑，不适合传输；</p>
+                    <p>苹果17年年推出了了HEIF图像编码和HEVC视频编码，今年年 iOS 13带来了了HEIFS(序列</p>
+                    <p>帧动图)和支持AlphaChannel的HEVC编码器</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808063929696.png" alt="image-20210808063929696"></p>
+                    <p>⽹上查到的⽬目前⽀支持Alpha通道的文件格式：</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808063940130.png" alt="image-20210808063940130"></p>
+                    <h2 id="HEVC-with-alpha的应⽤用场景"><a href="#HEVC-with-alpha的应⽤用场景" class="headerlink" title="HEVC with alpha的应⽤用场景:"></a>HEVC with alpha的应⽤用场景:</h2>
+                    <ul>
+                      <li>Video Overlays</li>
+                      <li>SpriteKit / SceneKit / Metal</li>
+                      <li>Safary</li>
+                      <li>背景扣图</li>
+                    </ul>
+                    <p>首先介绍overlay的应⽤用场景：</p>
+                    <p>脑补富贵⽵竹和⾹香蕉在转</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064115939.png" alt="image-20210808064115939"></p>
+                    <p>脑补这俩东⻄西在哔哔</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064130203.png" alt="image-20210808064130203"></p>
+                    <h3 id="背景扣图"><a href="#背景扣图" class="headerlink" title="背景扣图:"></a>背景扣图:</h3>
+                    <p>这⾥里里说的背景扣图并不不是说⽣生产端摄像头录制视频实时扣图，实时去掉复杂背<br>景，⽽而是类似电影制作的原理理：<br>⼈站在绿幕前录⼀一段视频</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064249502.png" alt="image-20210808064249502"></p>
+                    <p>用custom compositor with co-image filter把绿色背景变成透明，并导出支持透明度的视频</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064322931.png" alt="image-20210808064322931"></p>
+                    <p>这个video可以浮在任何背景上，于是就有了这个“毫⽆违和感”的视频，脑补他在⽉月球上，但还活着</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808064333169.png" alt="image-20210808064333169"></p>
+                    <h2 id="HEVC-with-alpha基本原理理："><a href="#HEVC-with-alpha基本原理理：" class="headerlink" title="HEVC with alpha基本原理理："></a>HEVC with alpha基本原理理：</h2>
+                    <ul>
+                      <li>
+                        <p>⼀个视频⽂件中有若干视频轨</p>
+                      </li>
+                      <li>
+                        <p>一个视频轨有若干视频帧</p>
+                      </li>
+                      <li>
+                        <p>HEVC video就是其中⼀个视频轨</p>
+                      </li>
+                      <li>
+                        <p>每个视频帧有两个layer，Base Layer &amp; Alpha Layer,每个layer都是用HEVC</p>
+                      </li>
+                      <li>
+                        <p>codec编码压缩</p>
+                        <ul>
+                          <li>Base Layer是纯⾊色层</li>
+                          <li>Alpha Layer是透明层</li>
+                          <li>两个层的定义是遵循HEVC公开标准的，意味着没法处理理alpha layer的HEVC解码器会忽略略alpha layer，只解码base layer</li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <h2 id="相关的API使⽤用："><a href="#相关的API使⽤用：" class="headerlink" title="相关的API使⽤用："></a>相关的API使⽤用：</h2>
+                    <h3 id="生产端"><a href="#生产端" class="headerlink" title="生产端"></a>生产端</h3>
+                    <h4 id="AVAssetWriter："><a href="#AVAssetWriter：" class="headerlink" title="AVAssetWriter："></a>AVAssetWriter：</h4>
+                    <p>你可以在应⽤用⾥里里渲染Apple ProRes4444视频，⽤用AVAssetWriter把视频转成HEVC with alpha，</p>
+                    <h4 id="AVAssetExportSession："><a href="#AVAssetExportSession：" class="headerlink" title="AVAssetExportSession："></a>AVAssetExportSession：</h4>
+                    <h5 id="AVAssetExportSession-和他的新preset"><a href="#AVAssetExportSession-和他的新preset" class="headerlink" title="AVAssetExportSession 和他的新preset"></a>AVAssetExportSession 和他的新preset</h5>
+                    <h5 id="AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC-with-Alpha"><a href="#AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC-with-Alpha" class="headerlink" title="AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC with Alpha"></a>AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC
+                      with Alpha</h5>
+                    <h5 id="AVAssetExportSession-将透明背景的HEVC-with-Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H-264视频，以便在不支持HEVC的设备播放"><a href="#AVAssetExportSession-将透明背景的HEVC-with-Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H-264视频，以便在不支持HEVC的设备播放" class="headerlink"
+                        title="AVAssetExportSession 将透明背景的HEVC with Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H.264视频，以便在不支持HEVC的设备播放"></a>AVAssetExportSession
+                      将透明背景的HEVC with Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H.264视频，以便在不支持HEVC的设备播放</h5>
+                    <h5 id="VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC-with-alpha"><a href="#VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC-with-alpha" class="headerlink" title="VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC with alpha"></a>VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC
+                      with alpha</h5>
+                    <h3 id="消费端"><a href="#消费端" class="headerlink" title="消费端:"></a>消费端:</h3>
+                    <h5 id="AVPlayer通过-AVPlayerLayer渲染HEVC-with-Alpha"><a href="#AVPlayer通过-AVPlayerLayer渲染HEVC-with-Alpha" class="headerlink" title="AVPlayer通过 AVPlayerLayer渲染HEVC with Alpha"></a>AVPlayer通过 AVPlayerLayer渲染HEVC with Alpha</h5>
+                    <h5 id="AVPlayerItemVideoOutput-访问透明视频帧"><a href="#AVPlayerItemVideoOutput-访问透明视频帧" class="headerlink" title="AVPlayerItemVideoOutput 访问透明视频帧"></a>AVPlayerItemVideoOutput 访问透明视频帧</h5>
+                    <h5 id="AVAssetImageGenerator从HEVC-with-Alpha-提取⼀一个透明背景的CGImage"><a href="#AVAssetImageGenerator从HEVC-with-Alpha-提取⼀一个透明背景的CGImage" class="headerlink" title="AVAssetImageGenerator从HEVC with Alpha 提取⼀一个透明背景的CGImage"></a>AVAssetImageGenerator从HEVC
+                      with Alpha 提取⼀一个透明背景的CGImage</h5>
+                    <h5 id="AVAssetReader读取HEVC-with-Alpha的视频帧"><a href="#AVAssetReader读取HEVC-with-Alpha的视频帧" class="headerlink" title="AVAssetReader读取HEVC with Alpha的视频帧"></a>AVAssetReader读取HEVC with Alpha的视频帧</h5>
+                    <h5 id="VTDecompressionSession解码HEVC-with-Alpha-的sample-buffers"><a href="#VTDecompressionSession解码HEVC-with-Alpha-的sample-buffers" class="headerlink" title="VTDecompressionSession解码HEVC with Alpha 的sample buffers"></a>VTDecompressionSession解码HEVC
+                      with Alpha 的sample buffers</h5>
+                    <p>总之AVFoundation全家桶都⽀支持HEVC with alpha：</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065547446.png" alt="image-20210808065547446"></p>
+                    <p>代码例例⼦子:</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065608069.png" alt="image-20210808065608069"></p>
+                    <p>透明度⽀支持两种，⼀一种是alpha作⽤用到RGB，⼀一种是纯⾊色透明分开，<br>Premultiplied Alpha是推荐的，Session中没解释两种区别，猜测是Premultiplied<br>Alpha不不会把半透明的地⽅方处理理成纯⾊色，⽽而是保留留原视频帧透明度</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065640448.png" alt="image-20210808065640448"></p>
+                    <p>设置outputSettings和CVBufferSetAttachment时候⼀一定设置成匹配的，否则会<br>编码失败</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065715399.png" alt="image-20210808065715399"></p>
+                    <p>码率和质量量：<br>可以分别控制BaseLayer码率和alphalayer的质量量</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065745375.png" alt="image-20210808065745375"></p>
+                    <p>两种⽅方式判断HEVC视频是不不是有Alpha通道：</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065804445.png" alt="image-20210808065804445"></p>
+                    <p>如果想导出HEVC with Alpha，这样判断源视频是否有alpha通道</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065823478.png" alt="image-20210808065823478"></p>
+                    <p>HEVC with Alpha转成带纯⾊色背景的普通视频，可以指定背景⾊色</p>
+                    <p><img src="/2019/06/08/WWDC2019-Session-506-HEVC-Video-With-Alpha/image-20210808065841237.png" alt="image-20210808065841237"></p>
+                    <p>总结：</p>
+                    <ul>
+                      <li>基于⾼高压缩率HEVC编码</li>
+                      <li>⽀支持iOS13，tvOS13，macOS Catalina</li>
+                      <li>在⽐比较新的设备上⽀支持硬件加速</li>
+                      <li>AVFoundation全家桶⽀支持</li>
+                      <li>Safary⽀支持</li>
+                    </ul>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2018/07/20/《非暴力沟通》读书笔记/" rel="next" title="《非暴力沟通本》读书笔记">
+                          <i class="fa fa-chevron-left"></i> 《非暴力沟通本》读书笔记
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2020/04/19/视频直播码率自适应策略/" rel="prev" title="视频直播码率自适应策略">
+                          视频直播码率自适应策略 <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">六郎</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">15</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">3</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">16</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#HEVC-with-alpha的应⽤用场景"><span class="nav-number">1.</span> <span class="nav-text">HEVC with alpha的应⽤用场景:</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#背景扣图"><span class="nav-number">1.1.</span> <span class="nav-text">背景扣图:</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#HEVC-with-alpha基本原理理："><span class="nav-number">2.</span> <span class="nav-text">HEVC with alpha基本原理理：</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#相关的API使⽤用："><span class="nav-number">3.</span> <span class="nav-text">相关的API使⽤用：</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#生产端"><span class="nav-number">3.1.</span> <span class="nav-text">生产端</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#AVAssetWriter："><span class="nav-number">3.1.1.</span> <span class="nav-text">AVAssetWriter：</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#AVAssetExportSession："><span class="nav-number">3.1.2.</span> <span class="nav-text">AVAssetExportSession：</span></a>
+                              <ol class="nav-child">
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#AVAssetExportSession-和他的新preset"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">AVAssetExportSession 和他的新preset</span></a></li>
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC-with-Alpha"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">AVAssetExportPresetHEVC…WithAlpha将任何⽀支持alpha通道的视频转成HEVC
+                                      with Alpha</span></a></li>
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#AVAssetExportSession-将透明背景的HEVC-with-Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H-264视频，以便在不支持HEVC的设备播放"><span class="nav-number">3.1.2.3.</span> <span class="nav-text">AVAssetExportSession
+                                      将透明背景的HEVC with Alpha视频转成带纯⾊色背景的普通视频，⽐如不支持Alpha通道的普通H.264视频，以便在不支持HEVC的设备播放</span></a></li>
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC-with-alpha"><span class="nav-number">3.1.2.4.</span> <span class="nav-text">VTCompressionSession可以直接⽤用VideoToolBox将采集的视频帧编码成HEVC
+                                      with alpha</span></a></li>
+                              </ol>
+                            </li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#消费端"><span class="nav-number">3.2.</span> <span class="nav-text">消费端:</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-5"><a class="nav-link" href="#AVPlayer通过-AVPlayerLayer渲染HEVC-with-Alpha"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">AVPlayer通过 AVPlayerLayer渲染HEVC with Alpha</span></a></li>
+                            <li class="nav-item nav-level-5"><a class="nav-link" href="#AVPlayerItemVideoOutput-访问透明视频帧"><span class="nav-number">3.2.0.2.</span> <span class="nav-text">AVPlayerItemVideoOutput 访问透明视频帧</span></a></li>
+                            <li class="nav-item nav-level-5"><a class="nav-link" href="#AVAssetImageGenerator从HEVC-with-Alpha-提取⼀一个透明背景的CGImage"><span class="nav-number">3.2.0.3.</span> <span class="nav-text">AVAssetImageGenerator从HEVC
+                                  with Alpha 提取⼀一个透明背景的CGImage</span></a></li>
+                            <li class="nav-item nav-level-5"><a class="nav-link" href="#AVAssetReader读取HEVC-with-Alpha的视频帧"><span class="nav-number">3.2.0.4.</span> <span class="nav-text">AVAssetReader读取HEVC with Alpha的视频帧</span></a></li>
+                            <li class="nav-item nav-level-5"><a class="nav-link" href="#VTDecompressionSession解码HEVC-with-Alpha-的sample-buffers"><span class="nav-number">3.2.0.5.</span> <span class="nav-text">VTDecompressionSession解码HEVC
+                                  with Alpha 的sample buffers</span></a></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">六郎</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
