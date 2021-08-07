@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="去年，我们介绍了活动分类，它允许您使用运动数据创建分类器，但是如果你想从视频中对动作进行分类呢?如今，相机无处不在，用手机记录自己的视频变得非常容易。今年我们引入动作分类器来学习人的姿势。  什么是动作分类器 首先，它是一个ML标准的分类任务，目标是从预定义的分类集中选取一个合适的action标签，这个模型是由视觉公司的人体后估计算法驱动的，因此，它最适合于人体动作，但不适用于动物或物体的动">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="[WWDC2020 Session 10043] Build an Action Classifier with Create ML">
+  <meta property="og:url" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/index.html">
+  <meta property="og:site_name" content="雨生百谷">
+  <meta property="og:description" content="去年，我们介绍了活动分类，它允许您使用运动数据创建分类器，但是如果你想从视频中对动作进行分类呢?如今，相机无处不在，用手机记录自己的视频变得非常容易。今年我们引入动作分类器来学习人的姿势。  什么是动作分类器 首先，它是一个ML标准的分类任务，目标是从预定义的分类集中选取一个合适的action标签，这个模型是由视觉公司的人体后估计算法驱动的，因此，它最适合于人体动作，但不适用于动物或物体的动">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979016986163.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979046915052.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979047537491.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979771373160.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979123834915.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979771649648.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979130732716.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979132518659.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979134505979.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979135142961.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979136864695.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979151498655.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979153056938.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979154806094.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979157190983.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979191650564.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979192564063.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979193047786.jpg">
+  <meta property="og:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979193921035.jpg">
+  <meta property="og:updated_time" content="2020-09-12T03:50:57.013Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="[WWDC2020 Session 10043] Build an Action Classifier with Create ML">
+  <meta name="twitter:description" content="去年，我们介绍了活动分类，它允许您使用运动数据创建分类器，但是如果你想从视频中对动作进行分类呢?如今，相机无处不在，用手机记录自己的视频变得非常容易。今年我们引入动作分类器来学习人的姿势。  什么是动作分类器 首先，它是一个ML标准的分类任务，目标是从预定义的分类集中选取一个合适的action标签，这个模型是由视觉公司的人体后估计算法驱动的，因此，它最适合于人体动作，但不适用于动物或物体的动">
+  <meta name="twitter:image" content="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979016986163.jpg">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>[WWDC2020 Session 10043] Build an Action Classifier with Create ML | 雨生百谷</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">雨生百谷</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://zluyang.github.io/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="六郎">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="雨生百谷">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">[WWDC2020 Session 10043] Build an Action Classifier with Create ML
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2020-09-12 10:26:30 / Modified: 11:50:57" itemprop="dateCreated datePublished" datetime="2020-09-12T10:26:30+08:00">2020-09-12</time>
+
+
+
+
+
+
+
+                      </span>
+
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count valine-comment-count" data-xid="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/" class="leancloud_visitors" data-flag-title="[WWDC2020 Session 10043] Build an Action Classifier with Create ML">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <blockquote>
+                      <p>去年，我们介绍了活动分类，它允许您使用<strong>运动数据</strong>创建分类器，但是如果你想从视频中对动作进行分类呢?<br>如今，相机无处不在，用手机记录自己的视频变得非常容易。今年我们引入动作分类器来学习人的姿势。</p>
+                    </blockquote>
+                    <h2 id="什么是动作分类器"><a href="#什么是动作分类器" class="headerlink" title="什么是动作分类器"></a>什么是动作分类器</h2>
+                    <p>首先，它是一个ML标准的分类任务，目标是从预定义的分类集中选取一个合适的action标签，这个模型是由视觉公司的人体后估计算法驱动的，因此，它最适合于人体动作，但不适用于动物或物体的动作。</p>
+                    <h2 id="这个Session的目标"><a href="#这个Session的目标" class="headerlink" title="这个Session的目标"></a>这个Session的目标</h2>
+                    <p>要想随着时间的推移认出一个动作，单幅图像是不够的，预测发生在一个由一系列帧组成的<strong>时间窗口</strong>上，对于相机或视频流来说，预测可以一个窗口一个窗口地连续进行，更多关于视觉姿势的细节，在这个课程:《身体和手部的姿势识别》，这个Session的重点是学习如何使用Create ML，假设想构建一个app，利用动作分类器来识别并监督一个人的健身动作，比如动作是开合跳、弓箭步、深蹲等健身动作。<br>首先，我需要给每个动作准备一些视频剪辑，喂给Create
+                      ML，最后保存这个分类器模型，构建我们的健身训练app，现在让我们深入到每一步</p>
+                    <h3 id="模型准备阶段"><a href="#模型准备阶段" class="headerlink" title="模型准备阶段"></a>模型准备阶段</h3>
+                    <p>首先，我们希望我们的模型能够分辨我们在做的训练属于什么动作，我们需要收集这几种视频内容：开合跳、弓箭步、深蹲，每个视频应该只包含一种动作类型，视频中只包含一个人，在拍摄完视频后，如果在视频开始或结束时有额外的动作，你可能需要在照片应用程序中剪掉这些动作。<br>我们用整个身体来识别动作，所以要确保摄像机在整个动作范围内都能看到手臂和腿, 你需要往后稍一稍。<br>现在，创建一个文件夹来保存每种操作类型，文件夹名是希望预测的动作分类名称。<br><img
+                        src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979016986163.jpg" alt=""></p>
+                    <h4 id="数据清洗："><a href="#数据清洗：" class="headerlink" title="数据清洗："></a>数据清洗：</h4>
+                    <p>如果你收集了一些休息、伸展和坐下的例子，你可以把它们放在一个叫做“其他”的文件夹里。<br>虽然我们现在已经准备好训练了，但我想认真考虑下如果我们有不同情况的数据输入我们该怎么办，这些视频也许是别人为我们准备的视频，或者是从网上下载的，那问题来了，视频中既有标准动作又有我们不想要的休息或者其他乱入动作怎么办？<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979046915052.jpg"
+                        alt=""></p>
+                    <p>两个选择：</p>
+                    <ol>
+                      <li>我们有两个选择:我们可以使用视频编辑软件来裁剪出我们需要的动作</li>
+                      <li>我们可以在视频中找到动作开始和停止的时间，并将其记录在注释文件中,csv/json格式，可以在Apple官网看到注释文件的例子。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979047537491.jpg" alt=""></li>
+                    </ol>
+                    <h4 id="创建模型训练项目"><a href="#创建模型训练项目" class="headerlink" title="创建模型训练项目"></a>创建模型训练项目</h4>
+                    <p>启动Mac上的Create ML应用程序。<br>如果你正在使用<a href="https://developer.apple.com/documentation/macos-release-notes/macos-big-sur-11-beta-release-notes/" target="_blank" rel="noopener">macOS Big Sur</a>，它有一个新的模板: 动作分类。</p>
+                    <p>让我们为训练模型创建一个动作分类项目。<br>项目起个名字，加个描述,创建完会进到“model source”设置页。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979771373160.jpg" alt=""><br>我已经将所有的视频收集到一个训练文件夹中，下面有以动作命名的子文件夹。<br>让我们看看“开合跳”文件夹，它包含了开合跳的所有视频，把训练文件夹拖拽到训练数据Training
+                      Data Box中，Create ML应用程序会检查视频的格式是否合规，并告诉我们一些metadata。</p>
+                    <h4 id="配置模型"><a href="#配置模型" class="headerlink" title="配置模型"></a>配置模型</h4>
+                    <p>我们可以在这个页面配置Action during和Augmentations等重要选项。<br>Action during是非常重要的参数，它代表了我们要识别的动作的时间长度，如果我们处理的是一个复杂的动作，比如一个舞蹈动作，这需要足够长的时间来捕捉整个动作，可能是10秒，但是对于像健身运动这样的短时间重复动作，设置成2秒左右够了，之后Create ML会根据fps和Action during乘出预测窗口长度60帧。<br>Augumentations是一种不用录制更多视频就能增强训练集多样性的方法，如果我们所有的视频都是让一个人面朝左边拍摄的，那么水平翻转会生成镜像视频，使模型在两个方向上都运行得更好。</p>
+                    <p>你注意到上图中的右侧还有两个Box可以加数据,<strong>验证和测试</strong>：<br>如果你有额外的数据来测试你的模型，可以把他们加到测试数据中，当模型完成训练时，Create ML将自动对其执行测试，ML老手可能喜欢选择自己的验证数据，但在默认情况下，Create ML会自动使用你提供的训练数据作为测试数据选取源。</p>
+                    <h4 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h4>
+                    <p>当你的Mac从视频中训练动作分类器时，他会做两件事：<br>1）特征提取，从训练视频中计算出人体姿态，<br>2）一旦完成，它就可以训练模型了,特征提取是耗时任务，可能需要一段时间。</p>
+                    <p><strong>特征提取</strong><br>概念：利用视觉API的强大功能，可以查看视频的每一帧，并对身体上18个Landmark进行编码，包括手、腿、臀部、眼睛等等。<br>对于每个Landmark，它记录X和Y坐标加上一个置信度，这就形成了我们用于训练的特征。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979123834915.jpg"
+                        alt=""><br>训练完成后我们可以在「训练和评估」选项卡中看到最终的报告，我们可以看到模型的性能是如何随着时间而提高的，看起来80次循环是一个合理的选择，这条线向右上升，然后变平滑，意味着训练已趋于稳定状态。<br>结果中的Iterations猜测是防止机器学习算法过拟合提高泛化能力的参数。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979771649648.jpg"
+                        alt=""><br>你可以使用Evaluate选项卡查看每个类别的训练性能，从这个页面可以看到这个模型对于我们想要识别的每一种动作是否同样有效，如果我们添加了验证或测试数据，您可以在这里看到结果。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979130732716.jpg" alt=""></p>
+                    <h4 id="结果预览"><a href="#结果预览" class="headerlink" title="结果预览"></a>结果预览</h4>
+                    <p>但我真正想要的是看到这个模型的实际应用，进入预览选项卡，可以拖个新的视频验证下模型（nice）<img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979132518659.jpg" alt=""><br>对视频进行处理以识别姿势，然后用模型分类这些动作，现在它正对整个视频运行分类算法，你也可以选择流媒体的方式来跑这个模型。</p>
+                    <p>按下预览播放，看看它检测到什么，注意视频上的标签,随着视频中动作的展开，你可以看到下面分类标签在变化，骨架信息会叠在视频上<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979134505979.jpg" alt=""></p>
+                    <p>我们可以点Origin把它关掉，或者在黑背景中观察骨架运动的姿势。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979135142961.jpg" alt=""></p>
+                    <h4 id="导出模型"><a href="#导出模型" class="headerlink" title="导出模型"></a>导出模型</h4>
+                    <p>接下来导出模型，这有些设置，比如Model的Size参数，关系到你的Bundle大小，然后Model可以直接拖拽到Finder备用<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979136864695.jpg" alt=""></p>
+                    <h4 id="集成到App"><a href="#集成到App" class="headerlink" title="集成到App"></a>集成到App</h4>
+                    <p>接下来我们集成这个Model到App中，比如我们要做个App从摄像机或视频文件中识别开合跳。<br>Model以Pose而不是VideoResource作为输入。 为了得到Pose，我们使用Vision的API VNDectectHumanBodyPoseRequest，如果我们使用视频URL, VNVideoProcessor可以处理整个视频的姿势请求，并且在完成回调中获得每一帧的Pose
+                      result。而在处理摄像头的实时流时，我们可以使用VNImageRequestHandler为每个捕获的图像帧执行同一个VNDectectHumanBodyPoseRequest。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979151498655.jpg" alt=""><br>不管我们如何从每一帧中得到姿态，我们都需要将它们聚合到一个三维数组的预测窗口中，作为模型的输入，这数组看起来复杂，但是如果我们使用Vision的keypointsMultiArray
+                      API，就不必处理细节了，考虑到我们的预测窗口大小60帧，我们可以简单地将每秒30帧的过程拼接起来形成一个2s预测窗口，如下<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979153056938.jpg" alt=""></p>
+                    <p>有了这样一个准备好的窗口，它就可以作为输入传递给我们的模型。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979154806094.jpg" alt=""></p>
+                    <p>最后，模型输出结果包括一个「动作名称」和一个「置信度」。 </p>
+                    <p>现在，让我们在Xcode中浏览一下这些步骤。 这是我们的健身App，这是我们刚刚训练出来的健身动作分类器,这个元数据页面向我们展示了相关的用户和模型信息，比如作者、描述、类标签名称，甚至层分布。预测页面向我们展示了详细的模型输入和输出信息，比如所需的多维数组input的维度数以及分类的标签集。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979157190983.jpg"
+                        alt=""></p>
+                    <p>现在，我们看模型预测的Code，在我的预测器代码中，首先初始化FitnessClassifier和VNDetectHumanBodyPoseRequest：</p>
+                    <figure class="highlight plain">
+                      <figcaption><span>Fitness classifier model.</span></figcaption>
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">let fitnessClassifier = FitnessClassifier()</span><br><span class="line"></span><br><span class="line">/// Vision body pose request.</span><br><span class="line">let humanBodyPoseRequest = VNDetectHumanBodyPoseRequest()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>因为模型采用预测窗口作为输入，所以需要一个窗口缓冲区来保存过去两秒钟的60个Pose。60是我们用于训练的模型预测窗口的大小，当从相机接收到一帧时，我们需要提取姿态，这包括调用Vision api并执行get pose的请求，在我们将提取的姿势添加到Window
+                      buffer前，请记住，动作分类器只能喂单人的数据，所以如果Vision检测到多人，我们需要实现一个选单人的逻辑，这里，在这个应用程序中只是简单选了Size最大的人，你也可以选其他方式，现在，让我们向窗口添加Pose。一旦window buffer满60了，我们就可以开始用模型预测了。<br>
+                      <figure class="highlight plain">
+                        <figcaption><span>Extracts poses from a frame.</span></figcaption>
+                        <table>
+                          <tr>
+                            <td class="gutter">
+                              <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre>
+                            </td>
+                            <td class="code">
+                              <pre><span class="line">func processFrame(_ samplebuffer: CMSampleBuffer) throws -&gt; [VNRecognizedPointsObservation] &#123;</span><br><span class="line">    // Perform Vision body pose request</span><br><span class="line">    let framePoses = extractPoses(from: samplebuffer)</span><br><span class="line"></span><br><span class="line">    // Select the most promiment person.</span><br><span class="line">    let pose = try selectMostProminentPerson(from: framePoses)</span><br><span class="line"></span><br><span class="line">    // Add the pose to window</span><br><span class="line">    posesWindow.append(pose)</span><br><span class="line"></span><br><span class="line">    return framePoses</span><br><span class="line">&#125;</span><br></pre>
+                            </td>
+                          </tr>
+                        </table>
+                      </figure>
+                    </p>
+                    <p>这款应用程序每半秒就预测一次，但是您可以根据自己的case决定不同的时间间隔或触发机制。为了准备模型输入，我需要将窗口中的每个姿态转换为一个多维数组，使用方便的API keypointsMultiArray，如果没有人被检测到，简单填充零。 然后我们将60个数组串成一个数组，这就是我们的模型输入。<br>最后，只需要一行代码就可以模型预测，输出包括预测的标签名称和置信度。最后，不要忘记重置windwow buffer，</p>
+                    <figure class="highlight plain">
+                      <figcaption><span>Make a model prediction on a window.</span></figcaption>
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">func makePrediction() throws -&gt; PredictionOutput &#123;</span><br><span class="line">    // Prepare model input: convert each pose to a multi-array, and concatenate multi-arrays.</span><br><span class="line">    let poseMultiArrays: [MLMultiArray] = try posesWindow.map &#123; person in</span><br><span class="line">        guard let person = person else &#123;</span><br><span class="line">            // Pad 0s when no person detected.</span><br><span class="line">            return zeroPaddedMultiArray()</span><br><span class="line">        &#125;</span><br><span class="line">        return try person.keypointsMultiArray()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let modelInput = MLMultiArray(concatenating: poseMultiArrays, axis: 0, dataType: .float)</span><br><span class="line"></span><br><span class="line">    // Perform prediction</span><br><span class="line">    let predictions = try fitnessClassifier.prediction(poses: modelInput)</span><br><span class="line"></span><br><span class="line">    // Reset poses window</span><br><span class="line">    posesWindow.removeFirst(predictionInterval)</span><br><span class="line"></span><br><span class="line">    return (</span><br><span class="line">        label: predictions.label,</span><br><span class="line">        confidence: predictions.labelProbabilities[predictions.label]!</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>这就是使用动作分类器进行预测的全部内容。</p>
+                    <h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4>
+                    <p>现在让我们试试这App，看看它是如何work的，打开应用程序，点击开始按钮，我的姿势会从每一帧中提取出来，并不断做出预测，就像在应用程序的底部显示的那样。 这是我们的调试视图和结果标签，现在，让我开始吧。 我完成了五秒钟的开合跳挑战！<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979191650564.jpg"
+                        alt=""></p>
+                    <p>正如你看到的，一旦模型识别到我的动作，计时器就开始计时，一旦我停止，模型就识别出我的动作是对应的动作类别，并开始等待下一个挑战: 弓箭步。<br>我准备好了。 我完成了箭步，但我还不着急。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979192564063.jpg" alt=""></p>
+                    <p>我想休息一下，喝点水。 所有的事情都是交互式的，我不需要回去操作设备，因为这时候我的喝水动作被识别为other，这对于在家锻炼来说非常方便。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979193047786.jpg" alt=""><br>最后，完成了深蹲，现在，我们的三个挑战结束了。以下是我运动的Summary
+                      View。<br><img src="/2020/09/12/WWDC2020-Session-10043-Build-an-Action-Classifier-with-Create-ML/15979193921035.jpg" alt=""></p>
+                    <h3 id="最佳实践："><a href="#最佳实践：" class="headerlink" title="最佳实践："></a>最佳实践：</h3>
+                    <h4 id="数据准备："><a href="#数据准备：" class="headerlink" title="数据准备："></a>数据准备：</h4>
+                    <p><strong>Good input,Good output.</strong></p>
+                    <ul>
+                      <li>如果你把你的模型应用在「重复的多样化的」训练集上，你的模型会得到最好的训练结果。早些时候，我会确保每个我想分类的动作都有大约50个视频，你最好照做。</li>
+                      <li>一个分类下的视频中选择不同的人。他们会带来不同的风格、运动能力和速度，你的模型需要足够的多样性用来学习。</li>
+                      <li>如果视频中的用户会移动，尽量从侧面、背面、前面多角度地拍摄动作。这个模型确实需要理解运动。</li>
+                      <li>但它也需要理解我们什么时候没在运动或干脆静止的状态。你可以创建两个额外的文件夹:一个用来到处晃悠和随意伸展，另一个用来安静地坐着或呆着别动。</li>
+                      <li>让我们考虑一下如何为动作分类器捕捉优秀的视频。摄影师的任何动作都可能被理解为被摄对象的移动。所以让我们用三脚架来保持相机的稳定，或者把它放在某个固定的地方别晃。</li>
+                      <li>pose detector需要能清楚地看到身体的各部位。所以如果你的衣服和背景撞色，效果就不对了。</li>
+                      <li>同理，大码或者比较嘻哈的衣服可能会降低动作识别的准确度。现在你知道了如何为你的动作分类器挑选最好的视频。</li>
+                    </ul>
+                    <h5 id="调参："><a href="#调参：" class="headerlink" title="调参："></a>调参：</h5>
+                    <p>有了数据后，请花一点时间配置您的训练参数。一个关键参数是动作持续时间(以秒为单位)或衍生变量预测窗口大小。长度应该与视频中的动作时长相匹配。并尽量在相同的时间内完成所有的动作。视频中的帧速率会影响预测窗口的有效长度（windowsSize = fps *
+                      seconds）。因此，在你的待训练视频帧之间保持平均帧率恒定是很重要的(避免使用帧率可变视频)，以获得准确的预测结果。在应用程序使用模型时，请确保只选择一个人。当发现多人时，你的应用程序也应该只关注一个人。或者您可以实现您自己的选择逻辑，根据人的size或在Skeleton中的positon来选择人。这可以通过识别的Landmark来实现。如果你想计算动作的重复次数，你需要确保每一个训练视频只重复一个动作。当你在你的应用程序中进行预测时，你应该找到一个可靠的触发机制在正确的时机开始预测，或者实现一些逻辑来正确地更新计数器。最后，您可以使用一个动作分类器来做打分或判断一个动作的质量。例如，用预测结果中的「置信度」来对比「示范动作」的置信度来给动作的质量打分。以上是这个Session的全部内容。</p>
+                    <h3 id="感想："><a href="#感想：" class="headerlink" title="感想："></a>感想：</h3>
+                    <p>API nice，简化到不需要动机器学习<br>如果性能Amazing到商用SDK的程度，那这类商用SDK会比较尴尬了</p>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2020/06/25/LeetCode-1195-交替打印字符串/" rel="next" title="LeetCode 1195. 「交替打印字符串」">
+                          <i class="fa fa-chevron-left"></i> LeetCode 1195. 「交替打印字符串」
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2020/09/12/WWDC2020-Session-10653-Detect-Body-and-Hand-Pose-with-Vision/" rel="prev" title="[WWDC2020 Session 10653] Detect Body and Hand Pose with Vision">
+                          [WWDC2020 Session 10653] Detect Body and Hand Pose with Vision <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">六郎</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">13</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">4</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">16</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#什么是动作分类器"><span class="nav-number">1.</span> <span class="nav-text">什么是动作分类器</span></a></li>
+                    <li class="nav-item nav-level-2"><a class="nav-link" href="#这个Session的目标"><span class="nav-number">2.</span> <span class="nav-text">这个Session的目标</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#模型准备阶段"><span class="nav-number">2.1.</span> <span class="nav-text">模型准备阶段</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#数据清洗："><span class="nav-number">2.1.1.</span> <span class="nav-text">数据清洗：</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#创建模型训练项目"><span class="nav-number">2.1.2.</span> <span class="nav-text">创建模型训练项目</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#配置模型"><span class="nav-number">2.1.3.</span> <span class="nav-text">配置模型</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#开始训练"><span class="nav-number">2.1.4.</span> <span class="nav-text">开始训练</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#结果预览"><span class="nav-number">2.1.5.</span> <span class="nav-text">结果预览</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#导出模型"><span class="nav-number">2.1.6.</span> <span class="nav-text">导出模型</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#集成到App"><span class="nav-number">2.1.7.</span> <span class="nav-text">集成到App</span></a></li>
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#测试"><span class="nav-number">2.1.8.</span> <span class="nav-text">测试</span></a></li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#最佳实践："><span class="nav-number">2.2.</span> <span class="nav-text">最佳实践：</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-4"><a class="nav-link" href="#数据准备："><span class="nav-number">2.2.1.</span> <span class="nav-text">数据准备：</span></a>
+                              <ol class="nav-child">
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#调参："><span class="nav-number">2.2.1.1.</span> <span class="nav-text">调参：</span></a></li>
+                              </ol>
+                            </li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#感想："><span class="nav-number">2.3.</span> <span class="nav-text">感想：</span></a></li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">六郎</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

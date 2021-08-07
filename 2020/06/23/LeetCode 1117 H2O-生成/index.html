@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="LeetCode 1117. H2O 生成    现在有两种线程，氧 oxygen 和氢 hydrogen，你的目标是组织这两种线程来产生水分子。存在一个屏障（barrier）使得每个线程必须等候直到一个完整水分子能够被产生出来。氢和氧线程会被分别给予 releaseHydrogen 和 releaseOxygen 方法来允许它们突破屏障。这些线程应该三三成组突破屏障并能立即组合产生一个水分子。你">
+  <meta name="keywords" content="多线程,算法,Objective-C,iOS">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LeetCode 1117 「H2O 生成」">
+  <meta property="og:url" content="https://zluyang.github.io/2020/06/23/LeetCode 1117 H2O-生成/index.html">
+  <meta property="og:site_name" content="雨生百谷">
+  <meta property="og:description" content="LeetCode 1117. H2O 生成    现在有两种线程，氧 oxygen 和氢 hydrogen，你的目标是组织这两种线程来产生水分子。存在一个屏障（barrier）使得每个线程必须等候直到一个完整水分子能够被产生出来。氢和氧线程会被分别给予 releaseHydrogen 和 releaseOxygen 方法来允许它们突破屏障。这些线程应该三三成组突破屏障并能立即组合产生一个水分子。你">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:updated_time" content="2020-06-25T14:23:04.707Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="LeetCode 1117 「H2O 生成」">
+  <meta name="twitter:description" content="LeetCode 1117. H2O 生成    现在有两种线程，氧 oxygen 和氢 hydrogen，你的目标是组织这两种线程来产生水分子。存在一个屏障（barrier）使得每个线程必须等候直到一个完整水分子能够被产生出来。氢和氧线程会被分别给予 releaseHydrogen 和 releaseOxygen 方法来允许它们突破屏障。这些线程应该三三成组突破屏障并能立即组合产生一个水分子。你">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://zluyang.github.io/2020/06/23/LeetCode 1117 H2O-生成/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>LeetCode 1117 「H2O 生成」 | 雨生百谷</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">雨生百谷</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://zluyang.github.io/2020/06/23/LeetCode 1117 H2O-生成/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="六郎">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="雨生百谷">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">LeetCode 1117 「H2O 生成」
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2020-06-23 13:54:27" itemprop="dateCreated datePublished" datetime="2020-06-23T13:54:27+08:00">2020-06-23</time>
+
+
+
+
+
+
+
+                        <span class="post-meta-divider">|</span>
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-check-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Edited on</span>
+
+                        <time title="Modified: 2020-06-25 22:23:04" itemprop="dateModified" datetime="2020-06-25T22:23:04+08:00">2020-06-25</time>
+
+
+                      </span>
+
+
+                      <span class="post-category">
+
+                        <span class="post-meta-divider">|</span>
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-folder-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">In</span>
+
+
+                        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+
+
+
+                      </span>
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2020/06/23/LeetCode 1117 H2O-生成/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count valine-comment-count" data-xid="/2020/06/23/LeetCode 1117 H2O-生成/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2020/06/23/LeetCode 1117 H2O-生成/" class="leancloud_visitors" data-flag-title="LeetCode 1117 「H2O 生成」">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <h1 id="LeetCode-1117-H2O-生成"><a href="#LeetCode-1117-H2O-生成" class="headerlink" title="LeetCode 1117. H2O 生成"></a><a href="https://leetcode-cn.com/problems/building-h2o/" target="_blank" rel="noopener">LeetCode 1117. H2O 生成</a></h1>
+                    <blockquote>
+                      <p>现在有两种线程，氧 oxygen 和氢 hydrogen，你的目标是组织这两种线程来产生水分子。<br>存在一个屏障（barrier）使得每个线程必须等候直到一个完整水分子能够被产生出来。<br>氢和氧线程会被分别给予 releaseHydrogen 和 releaseOxygen 方法来允许它们突破屏障。<br>这些线程应该三三成组突破屏障并能立即组合产生一个水分子。<br>你必须保证产生一个水分子所需线程的结合必须发生在下一个水分子产生之前。</p>
+                    </blockquote>
+                    <blockquote>
+                      <p>换句话说:</p>
+                    </blockquote>
+                    <blockquote>
+                      <p>如果一个氧线程到达屏障时没有氢线程到达，它必须等候直到两个氢线程到达。<br>如果一个氢线程到达屏障时没有其它线程到达，它必须等候直到一个氧线程和另一个氢线程到达。<br>书写满足这些限制条件的氢、氧线程同步代码。</p>
+                    </blockquote>
+                    <h1 id="Objective-C-的解法"><a href="#Objective-C-的解法" class="headerlink" title="Objective-C 的解法"></a>Objective-C 的解法</h1>
+                    <p><strong>利用两个NSCondition条件变量来彼此关照，Code如下：</strong></p>
+                    <figure class="highlight plain">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.hCondition = [[NSCondition alloc] init];</span><br><span class="line">    self.oCondition = [[NSCondition alloc] init];</span><br><span class="line">    self.lock = [[NSRecursiveLock alloc] init];</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">        while (1) &#123;</span><br><span class="line">            [self hydrogen];</span><br><span class="line">            usleep(1000);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">        while (1) &#123;</span><br><span class="line">            [self oxygen];</span><br><span class="line">            usleep(1000);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)hydrogen &#123;</span><br><span class="line">    [self.oCondition lock];</span><br><span class="line">    if (_hydrogenCnt == 2) &#123;</span><br><span class="line">        //氢原子ready了，就等氧原子了</span><br><span class="line">        [self.oCondition wait];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        NSLog(@&quot;H&quot;);</span><br><span class="line">        _hydrogenCnt++;</span><br><span class="line">        //氢原子合成1个，是否可以合成H2O了</span><br><span class="line">        [self.hCondition signal];</span><br><span class="line">    &#125;</span><br><span class="line">    if (_hydrogenCnt == 2 &amp;&amp; _oxygenCnt == 1) &#123;</span><br><span class="line">        _hydrogenCnt = 0;</span><br><span class="line">        _oxygenCnt = 0;</span><br><span class="line">        NSLog(@&quot;H2O&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    [self.oCondition unlock];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)oxygen &#123;</span><br><span class="line">    [self.hCondition lock];</span><br><span class="line">    if (_oxygenCnt == 1) &#123;</span><br><span class="line">        //氧原子ready了，就等氢原子了</span><br><span class="line">        [self.hCondition wait];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        NSLog(@&quot;O&quot;);</span><br><span class="line">         _oxygenCnt++;</span><br><span class="line">         //氧原子合成1个，是否可以合成H2O了</span><br><span class="line">        [self.oCondition signal];</span><br><span class="line">    &#125;</span><br><span class="line">    if (_hydrogenCnt == 2 &amp;&amp; _oxygenCnt == 1) &#123;</span><br><span class="line">        _hydrogenCnt = 0;</span><br><span class="line">        _oxygenCnt = 0;</span><br><span class="line">        NSLog(@&quot;H2O&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    [self.hCondition unlock];</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p><strong>总结：</strong><br>Condition操作需要包在lock操作里，保证数据的准确性<br>两个线程加上usleep(1000) 会把CPU占用率从40%降到10%<br>使用条件锁的模式：</p>
+                    <figure class="highlight plain">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">- (void) method1 &#123;</span><br><span class="line">    [myCondition lock];</span><br><span class="line">    while (!someCheckIsTrue)</span><br><span class="line">        [myCondition wait];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // Do something.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    [myCondition unlock];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void) method2 &#123;</span><br><span class="line"></span><br><span class="line">    [myCondition lock];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // Do something.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    someCheckIsTrue = YES;</span><br><span class="line">    [myCondition signal];</span><br><span class="line">    [myCondition unlock];</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+                    <div class="post-tags">
+
+                      <a href="/tags/多线程/" rel="tag"># 多线程</a>
+
+                      <a href="/tags/算法/" rel="tag"># 算法</a>
+
+                      <a href="/tags/Objective-C/" rel="tag"># Objective-C</a>
+
+                      <a href="/tags/iOS/" rel="tag"># iOS</a>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2020/04/19/幸福课-第一讲/" rel="next" title="幸福课-第一讲">
+                          <i class="fa fa-chevron-left"></i> 幸福课-第一讲
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2020/06/25/LeetCode-1195-交替打印字符串/" rel="prev" title="LeetCode 1195. 「交替打印字符串」">
+                          LeetCode 1195. 「交替打印字符串」 <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">六郎</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">13</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">4</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">16</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#LeetCode-1117-H2O-生成"><span class="nav-number">1.</span> <span class="nav-text">LeetCode 1117. H2O 生成</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#Objective-C-的解法"><span class="nav-number">2.</span> <span class="nav-text">Objective-C 的解法</span></a></li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">六郎</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

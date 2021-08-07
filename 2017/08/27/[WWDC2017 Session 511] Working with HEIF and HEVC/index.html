@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+  <link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+  <script id="hexo.configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {
+      root: '/',
+      scheme: 'Muse',
+      version: '7.1.0',
+      sidebar: {
+        "position": "left",
+        "display": "post",
+        "offset": 12,
+        "onmobile": false,
+        "dimmer": false
+      },
+      back2top: true,
+      back2top_sidebar: false,
+      fancybox: false,
+      fastclick: false,
+      lazyload: false,
+      tabs: true,
+      motion: {
+        "enable": true,
+        "async": false,
+        "transition": {
+          "post_block": "fadeIn",
+          "post_header": "slideDownIn",
+          "post_body": "slideDownIn",
+          "coll_header": "slideLeftIn",
+          "sidebar": "slideUpIn"
+        }
+      },
+      algolia: {
+        applicationID: '',
+        apiKey: '',
+        indexName: '',
+        hits: {
+          "per_page": 10
+        },
+        labels: {
+          "input_placeholder": "Search for Posts",
+          "hits_empty": "We didn't find any results for the search: ${query}",
+          "hits_stats": "${hits} results found in ${time} ms"
+        }
+      }
+    };
+  </script>
+  <meta name="description" content="前情提要 什么是HEVC、苹果为什么选择HEVC，之前在503 hevc introduce已经介绍过了，总的来说就是为了4K甚至更大的分辨率、高比特深度（high depths）比如10-bit、更宽的色彩空间，做这些都需要更高的压缩率来支撑，hevc相对H.264压缩率提高了40%，对于相机采集的场景，相比H.264压缩率提升了50%  今天讲的主要是如何应用，分四个主题：    Access">
+  <meta name="keywords" content="HEVC,H.265,HEIF,WWDC,2017,编码原理">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="WWDC 2017 Session 511 Working with HEIF and HEVC">
+  <meta property="og:url" content="https://zluyang.github.io/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/index.html">
+  <meta property="og:site_name" content="雨生百谷">
+  <meta property="og:description" content="前情提要 什么是HEVC、苹果为什么选择HEVC，之前在503 hevc introduce已经介绍过了，总的来说就是为了4K甚至更大的分辨率、高比特深度（high depths）比如10-bit、更宽的色彩空间，做这些都需要更高的压缩率来支撑，hevc相对H.264压缩率提高了40%，对于相机采集的场景，相比H.264压缩率提升了50%  今天讲的主要是如何应用，分四个主题：    Access">
+  <meta property="og:locale" content="zh-Hans">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/choose_codec.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/capturemoviewithhevc.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/captureLivePhoto.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/captureComplate.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/VideoToolBoxPreset.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/bitdepth.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame101.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame1.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame2.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame3.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame4.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame6.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame7.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame8.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/frame9.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/heifpronounce.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/heifdepthmap.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/zhihuceju.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/origingirl.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/origingirl1.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/origingirl2.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/origingirl3.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/orgingirlfoot1.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/orgingirlfoot2.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/longExpose.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/zoom1.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/zoom2.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/captureheif.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/capturedelegate.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/oldwaysave.jpg">
+  <meta property="og:image" content="http://ovbu9b92e.bkt.clouddn.com/newwaysave.jpg">
+  <meta property="og:updated_time" content="2018-04-30T13:18:13.000Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="WWDC 2017 Session 511 Working with HEIF and HEVC">
+  <meta name="twitter:description" content="前情提要 什么是HEVC、苹果为什么选择HEVC，之前在503 hevc introduce已经介绍过了，总的来说就是为了4K甚至更大的分辨率、高比特深度（high depths）比如10-bit、更宽的色彩空间，做这些都需要更高的压缩率来支撑，hevc相对H.264压缩率提高了40%，对于相机采集的场景，相比H.264压缩率提升了50%  今天讲的主要是如何应用，分四个主题：    Access">
+  <meta name="twitter:image" content="http://ovbu9b92e.bkt.clouddn.com/choose_codec.jpg">
+
+
+
+
+
+
+
+  <link rel="canonical" href="https://zluyang.github.io/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/">
+
+
+
+  <script id="page.configurations">
+    CONFIG.page = {
+      sidebar: "",
+    };
+  </script>
+
+  <title>WWDC 2017 Session 511 Working with HEIF and HEVC | 雨生百谷</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <style>
+      .use-motion .motion-element,
+      .use-motion .brand,
+      .use-motion .menu-item,
+      .sidebar-inner,
+      .use-motion .post-block,
+      .use-motion .pagination,
+      .use-motion .comments,
+      .use-motion .post-header,
+      .use-motion .post-body,
+      .use-motion .collection-title {
+        opacity: initial;
+      }
+
+      .use-motion .logo,
+      .use-motion .site-title,
+      .use-motion .site-subtitle {
+        opacity: initial;
+        top: initial;
+      }
+
+      .use-motion .logo-line-before i {
+        left: initial;
+      }
+
+      .use-motion .logo-line-after i {
+        right: initial;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+
+
+
+
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-wrapper">
+          <div class="site-meta">
+
+
+            <div class="custom-logo-site-title">
+              <a href="/" class="brand" rel="start">
+                <span class="logo-line-before"><i></i></span>
+                <span class="site-title">雨生百谷</span>
+                <span class="logo-line-after"><i></i></span>
+              </a>
+            </div>
+
+
+            <p class="site-subtitle">“Live well, Laugh often, Love much.”</p>
+
+
+
+          </div>
+
+          <div class="site-nav-toggle">
+            <button aria-label="Toggle navigation bar">
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+              <span class="btn-bar"></span>
+            </button>
+          </div>
+        </div>
+
+
+        <nav class="site-nav">
+
+          <ul id="menu" class="menu">
+
+
+
+
+
+            <li class="menu-item menu-item-home">
+
+
+
+
+
+
+
+
+
+              <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-archives">
+
+
+
+
+
+
+
+
+
+              <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-about">
+
+
+
+
+
+
+
+
+
+              <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-tags">
+
+
+
+
+
+
+
+
+
+              <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+            </li>
+
+
+
+
+            <li class="menu-item menu-item-categories">
+
+
+
+
+
+
+
+
+
+              <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+            </li>
+
+
+
+          </ul>
+
+
+
+
+
+
+
+
+        </nav>
+
+
+
+
+
+
+
+      </div>
+    </header>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+          <div id="content" class="content">
+
+
+            <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+
+
+              <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+
+
+
+                <div class="post-block">
+                  <link itemprop="mainEntityOfPage" href="https://zluyang.github.io/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/">
+
+                  <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                    <meta itemprop="name" content="六郎">
+                    <meta itemprop="description" content="“Live well, Laugh often, Love much.”">
+                    <meta itemprop="image" content="/images/avatar.gif">
+                  </span>
+
+                  <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="雨生百谷">
+                  </span>
+
+
+                  <header class="post-header">
+
+
+
+                    <h1 class="post-title" itemprop="name headline">WWDC 2017 Session 511 Working with HEIF and HEVC
+
+
+
+                    </h1>
+
+
+                    <div class="post-meta">
+                      <span class="post-time">
+
+
+
+
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Posted on</span>
+
+
+
+
+
+
+                        <time title="Created: 2017-08-27 20:08:43" itemprop="dateCreated datePublished" datetime="2017-08-27T20:08:43+08:00">2017-08-27</time>
+
+
+
+
+
+
+
+                        <span class="post-meta-divider">|</span>
+
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-calendar-check-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Edited on</span>
+
+                        <time title="Modified: 2018-04-30 21:18:13" itemprop="dateModified" datetime="2018-04-30T21:18:13+08:00">2018-04-30</time>
+
+
+                      </span>
+
+
+                      <span class="post-category">
+
+                        <span class="post-meta-divider">|</span>
+
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-folder-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">In</span>
+
+
+                        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/音视频/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a></span>
+
+
+
+
+                      </span>
+
+
+
+
+
+
+                      <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-comment-o"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Comments: </span>
+                        <a href="/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/#comments" itemprop="discussionUrl">
+                          <span class="post-comments-count valine-comment-count" data-xid="/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/" itemprop="commentCount"></span>
+                        </a>
+                      </span>
+
+
+
+
+
+                      <span id="/2017/08/27/[WWDC2017 Session 511] Working with HEIF and HEVC/" class="leancloud_visitors" data-flag-title="WWDC 2017 Session 511 Working with HEIF and HEVC">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                          <i class="fa fa-eye"></i>
+                        </span>
+
+                        <span class="post-meta-item-text">Views: </span>
+
+                        <span class="leancloud-visitors-count"></span>
+                      </span>
+
+
+
+
+
+
+
+
+                    </div>
+                  </header>
+
+
+
+
+
+                  <div class="post-body" itemprop="articleBody">
+
+
+
+
+
+                    <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1>
+                    <p>什么是HEVC、苹果为什么选择HEVC，之前在503 hevc introduce已经介绍过了，总的来说就是为了4K甚至更大的分辨率、高比特深度（high depths）比如10-bit、更宽的色彩空间，做这些都需要更高的压缩率来支撑，hevc相对H.264压缩率提高了40%，对于相机采集的场景，相比H.264压缩率提升了50%</p>
+                    <p> 今天讲的主要是如何应用，分四个主题：</p>
+                    <ul>
+                      <li>Access</li>
+                      <li>Playback</li>
+                      <li>Capture</li>
+                      <li>Export</li>
+                    </ul>
+                    <a id="more"></a>
+                    <h1 id="Access"><a href="#Access" class="headerlink" title="Access"></a>Access</h1>
+                    <p>PhotoKit的PHImageManager请求HEVC内容播放</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// PHImageManager</span></span><br><span class="line">manager.requestPlayerItem(forVideo: asset, options: <span class="literal">nil</span>)&#123;(playerItem, dictionary) <span class="keyword">in</span> <span class="comment">// use AVPlayerItem</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">manager.requestLivePhoto(<span class="keyword">for</span>: asset, targetSize: size, contentMode: .<span class="keyword">default</span>, options: <span class="literal">nil</span>)&#123;(livePhoto, dictionary) <span class="keyword">in</span> <span class="comment">// use PHLivePhoto</span></span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>PHAssetResourceManager请求HEVC的Assets，可访问对应文件，进行转码</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// PHImageManager</span></span><br><span class="line">manager.requestExportSession(forVideo: asset, options: <span class="literal">nil</span>, exportPreset: preset)&#123;(session, dictionary) <span class="keyword">in</span> <span class="comment">// use AVAssetExportSession</span></span><br><span class="line">&#125;</span><br><span class="line">manager.requestAVAsset(forVideo: asset, options: <span class="literal">nil</span>)&#123;(asset, audioMix, dictionary) <span class="keyword">in</span> <span class="comment">// use AVAsset</span></span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>用PHAssetResourceManager访问HEVC数据</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// PHAssetResourceManager</span></span><br><span class="line">resourceManager.requestData(<span class="keyword">for</span>: assetResource, options: <span class="literal">nil</span>, dataReceivedHandler:&#123;(data) <span class="keyword">in</span> <span class="comment">// use Data</span></span><br><span class="line">&#125;,&#123;(error) <span class="keyword">in</span> <span class="comment">// handle Error</span></span><br><span class="line">&#125;)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <h1 id="Playback"><a href="#Playback" class="headerlink" title="Playback"></a>Playback</h1>
+                    <ol>
+                      <li>HEVC支持AVKit、AVFoundation、VideoToolBox</li>
+                      <li>HEVC支持HLS、支持边下边播、本地文件播放</li>
+                      <li>MP4,MOV容器格式支持</li>
+                      <li>API是适配好的，不用修改调用点</li>
+                    </ol>
+                    <p>播放一个Video的API对于H.264和HEVC是一样的：</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> player = <span class="type">AVPlayer</span>(url: <span class="type">URL</span>(fileURLWithPath: <span class="string">"MyAwesomeMovie.mov"</span>))    </span><br><span class="line">player.play()</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>对于解码能力，想要判断iOS系统是否支持解码一个assetTrack用这isDecodable属性</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">assetTrack.isDecodable</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>对于播放能力，用isPlayable属性，不是所有内容都能实时播放、不同设备能力不一样<br>硬解码可以得到较好的功耗、最好的解码性能，下面这句用于判断是否具备硬解能力，这个API不光可以用于判断HEVC，对于其他Codec也适用</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> hardwareDecodeSupported = <span class="type">VTIsHardwareDecodeSupported</span>(kCMVideoCodecType_HEVC)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>我们该如何选择Codec，H.264还是HEVC？如果你更重视全平台兼容性，选H.264,这东西有十年了，被产业广泛接受，第三方库对他的兼容性很好，如果你要更小的文件或更高的清晰度，选HEVC<br><img src="http://ovbu9b92e.bkt.clouddn.com/choose_codec.jpg" alt=""></p>
+                    <h1 id="Capture"><a href="#Capture" class="headerlink" title="Capture"></a>Capture</h1>
+                    <p>接下来看看Capture，我们可以用AVFoundation来采集HEVC视频，视频容器格式支持mp4,mov，最低配需要A10 CPU也就是iPhone 7<br>我们看看大家比较熟悉的结构图</p>
+                    <p><img src="http://ovbu9b92e.bkt.clouddn.com/capturemoviewithhevc.jpg" alt=""></p>
+                    <p>这个图不再赘述，录制H.264 4K视频的常规代码如下</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> session = <span class="type">AVCaptureSession</span>()   </span><br><span class="line">session.sessionPreset = .hd4K3840x2160</span><br><span class="line"><span class="keyword">let</span> camera = <span class="type">AVCaptureDevice</span>.<span class="keyword">default</span>(.builtInWideAngleCamera, <span class="keyword">for</span>: <span class="literal">nil</span>, position: .back)   </span><br><span class="line"><span class="keyword">let</span> input = <span class="keyword">try</span>! <span class="type">AVCaptureDeviceInput</span>(device: camera!)</span><br><span class="line">session.addInput(input)</span><br><span class="line"><span class="keyword">let</span> movieFileOutput = <span class="type">AVCaptureMovieFileOutput</span>()    </span><br><span class="line">session.addOutput(movieFileOutput)</span><br><span class="line">session.startRunning()</span><br><span class="line">movieFileOutput.startRecording(to: url, recordingDelegate: <span class="keyword">self</span>)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>录制HEVC怎么做呢？</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> connection = movieFileOutput.connection(with: .video)</span><br><span class="line"><span class="keyword">if</span> movieFileOutput.availableVideoCodecTypes.<span class="built_in">contains</span>(.hevc) &#123;</span><br><span class="line">    outputSetings = [<span class="type">AVVideoCodecKey</span>: <span class="type">AVVideoCodecType</span>.hevc]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    outputSetings = [<span class="type">AVVideoCodecKey</span>: <span class="type">AVVideoCodecType</span>.h264] </span><br><span class="line">&#125;</span><br><span class="line">movieFileOutput.setOutputSettings(outputSetings, <span class="keyword">for</span>: connection!)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>采集HEVC的LivePhoto，结构与视频类似，但Output换成了AVCapturePhotoOutput<br><img src="http://ovbu9b92e.bkt.clouddn.com/captureLivePhoto.jpg" alt=""></p>
+                    <p>我们先看看LivePhoto有哪些更新：</p>
+                    <ul>
+                      <li>视频稳定性，播放时画面不再颤抖</li>
+                      <li>在播放LivePhoto时候不再停掉音乐播放</li>
+                      <li>更加流畅，帧率支持30fps</li>
+                    </ul>
+                    <p>录制HEVC的LivePhoto<br>iOS11提供了新API判断是否支持某个codec，如果不做这个判断赋值，默认是.hevc</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> photoSettings = <span class="type">AVCapturePhotoSettings</span>() </span><br><span class="line">photoSettings.livePhotoMovieFileURL = <span class="type">URL</span>(fileURLWithPath: myFilePath)</span><br><span class="line"><span class="keyword">if</span> photoOutput.availableLivePhotoVideoCodecTypes.<span class="built_in">contains</span>(.hevc) &#123;</span><br><span class="line">    photoSettings.livePhotoVideoCodecType = .hevc</span><br><span class="line">&#125;</span><br><span class="line">photoOutput.capturePhoto(with: photoSettings, delegate: <span class="keyword">self</span>)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>下面是定制性较强的采集流程图，用到了AVAssetWriter，可以想加一层滤镜处理。<br><img src="http://ovbu9b92e.bkt.clouddn.com/captureComplate.jpg" alt=""><br>配置AVAssetWritterInput有两种方式，建议用新API</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// iOS 7</span></span><br><span class="line">vdo.recommendedVideoSettingsForAssetWriter(writingTo: .mov)</span><br><span class="line"><span class="comment">// iOS 11</span></span><br><span class="line">vdo.recommendedVideoSettings(forVideoCodecType: .hevc, assetWriterOutputFileType: .mov)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <h1 id="Export"><a href="#Export" class="headerlink" title="Export"></a>Export</h1>
+                    <p>导出和转码HEVC</p>
+                    <ul>
+                      <li>AVFoundation和VideoToolbox支持转码到HEVC</li>
+                      <li>mp4、mov容器格式支持</li>
+                      <li>需要条件判断的代码支持（iPhone7+才能HEVC encode）</li>
+                    </ul>
+                    <p>对于AVAssetExportSession苹果引入了三个新的Preset，可将其他codec比如H.264转码成HEVC，以节省存储空间</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="type">AVAssetExportPresetHEVC1920x1080</span></span><br><span class="line"><span class="type">AVAssetExportPresetHEVC3840x2160</span> </span><br><span class="line"><span class="type">AVAssetExportPresetHEVCHighestQuality</span></span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>AVAssetExportSession是更高层的类，向下一层用AVAssetWriter来做转码的话，用下面两种方式来设置Preset</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">//Specify HEVC with output settings for AVAssetWriterInput</span></span><br><span class="line">settings = [<span class="type">AVVideoCodecKey</span>: <span class="type">AVVideoCodecType</span>.hevc]</span><br><span class="line"><span class="comment">//Convenient output settings with AVOutputSettingsAssistant</span></span><br><span class="line"><span class="type">AVOutputSettingsPreset</span>.hevc1920x1080 <span class="type">AVOutputSettingsPreset</span>.hevc3840x2160</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>不是所有编码器都能适配你的Output Settings选项，需要用一个函数验证你的输出是否支持你设置的编码codec,encoderID和properties是验证后OK的编码器ID和合法的输出设置选项</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> error = <span class="type">VTCopySupportedPropertyDictionaryForEncoder</span>( <span class="number">3840</span>, <span class="number">2160</span>,</span><br><span class="line">kCMVideoCodecType_HEVC, encoderSpecification, &amp;encoderID, &amp;properties)</span><br><span class="line"><span class="keyword">if</span> error == kVTCouldNotFindVideoEncoderErr &#123; <span class="comment">// no HEVC encoder</span></span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>向下一层来看VideoToolBox相关的编码API，最只要的类是VTCompressionSession<br><img src="http://ovbu9b92e.bkt.clouddn.com/VideoToolBoxPreset.jpg" alt=""></p>
+                    <h1 id="高级主题："><a href="#高级主题：" class="headerlink" title="高级主题："></a>高级主题：</h1>
+                    <h2 id="Bit-Depth"><a href="#Bit-Depth" class="headerlink" title="Bit Depth"></a>Bit Depth</h2>
+                    <p>日出日落在现实中和在电影里是不尽相同的，比如左边的渐变是电影中我们看到的渐变的细节，现象的原因是没有足够的精度去表达这个渐变色阶梯间的细微差别，而10-bit编码可以做到这样的精度，色彩渐变更细腻<br><img src="http://ovbu9b92e.bkt.clouddn.com/bitdepth.jpg" alt=""></p>
+                    <p>10-bit的另一个好处是相比8-bit更加节省存储空间，session没提 <a href="http://x264.nl/x264/10bit_02-ateme-why_does_10bit_save_bandwidth.pdf" target="_blank" rel="noopener">http://x264.nl/x264/10bit_02-ateme-why_does_10bit_save_bandwidth.pdf</a><br>对于8-bit和10-bit
+                      的支持多说一句，在 iOS 平台， 8-bit的 HEVC 硬编码需要至少
+                      A10 Fusion 芯片才能支持；而iOS的 10-bit HEVC 硬编，由于现有iPhone CPU Level不够，估计要等 A11 芯片了，猜测也许10月的iPhone 8；而 8 位及 10 位 HEVC 的软编码则是MacOS全平台支持。HEVC的硬编/软编的平台支持和8/10-bit的平台支持这个session说的有点乱，请没看[Session 503]的同学直接看下面总结的表格会清晰点：</p>
+                    <p>HEVC Encode Support</p>
+                    <ul>
+                      <li>8-bit hardware encode: iOS devices with A10 Fusion chip and over | macOS devices with 6th Generation Intel Core and over</li>
+                      <li>10-bit software encode: All Macs running macOS<br>HEVC Capture Support</li>
+                      <li>8-bit hardware encode: iOS devices with A10 Fusion chip and over [iPhone 7 Plus, iPhone 7, 10.5-inch iPad Pro, 12.5-inch iPad Pro (2017)]</li>
+                    </ul>
+                    <p>HEVC Decode Support</p>
+                    <ul>
+                      <li>8-bit hardware decode: iOS devices with A9 chip and over | macOS devices with 6th Generation Intel Core and over</li>
+                      <li>10-bit hardware decode: iOS devices with A9 chip and over | macOS devices with 7th Generation Intel Core</li>
+                      <li>8-bit software decode: All iOS devices | All Macs</li>
+                      <li>10-bit software decode: All iOS devices | All Macs</li>
+                    </ul>
+                    <p>那么如何设置10-bit呢？通过设置这个选项kVTCompressionPropertyKey_ProfileLevel 为 kVTProfileLevel_HEVC_Main10_AutoLevel，注意检查是否支持10-bit</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="type">Set</span> profile via kVTCompressionPropertyKey_ProfileLevel</span><br><span class="line"><span class="comment">// Check VTSessionCopySupportedPropertyDictionary() for support</span></span><br><span class="line">kVTProfileLevel_HEVC_Main10_AutoLevel</span><br><span class="line"><span class="comment">//CoreVideo pixel buffer format</span></span><br><span class="line">kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange <span class="comment">// 10-bit 4:2:0</span></span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <h2 id="Hierarchical-Frame-Encoding"><a href="#Hierarchical-Frame-Encoding" class="headerlink" title="Hierarchical Frame Encoding"></a>Hierarchical Frame Encoding</h2>
+                    <p><img src="http://ovbu9b92e.bkt.clouddn.com/frame101.jpg" alt=""></p>
+                    <p>视频帧基本类型介绍，I帧关键帧，P前向参考帧，B双向参考帧，I P B越往右压缩率越高，计算开销越大，这方面基础知识一大堆，想深入了解的同学自己搜搜就好，不再赘述<br>现在假设我们有个只能解码30fps的解码器，但有个240帧的内容（李安的比利林恩中场战事120帧。。），很显然，这个假想的解码器必须丢帧，丢帧原则是丢掉其他帧“不参考的帧”，比如IPPPPP这种帧序列可以丢最后一个P帧，没有帧参考他来做diff，同理也可以丢B帧。</p>
+                    <p>我们来看一个低端设备播放240fps内容的真实案例，每隔7个“droppable frame”有一个“Non-droppable frame”（droppable 和 non-droppable可理解成I/P帧的泛化），为了实现droppable frame可丢，让他们全都参考non-dropable frame，而不是他们之间相互参考，但这么做压缩率掉下去了，原因是不能参考邻居，导致每个drappable frame
+                      diff出的大小太大不省空间， 这是问题之一<br><img src="http://ovbu9b92e.bkt.clouddn.com/frame1.jpg" alt=""><br>由于假想的解码器只能解30fps的内容，开始丢尝试丢帧，每8个丢4个Droppable，丢到120fps<br><img src="http://ovbu9b92e.bkt.clouddn.com/frame2.jpg" alt=""><br>然后解码器说还是解不了那么多，继续丢到60fps<br><img
+                        src="http://ovbu9b92e.bkt.clouddn.com/frame3.jpg" alt=""><br>No way，继续减半丢到30fps<br><img src="http://ovbu9b92e.bkt.clouddn.com/frame4.jpg" alt=""><br>然而，这样的结构，我们很难决策是间隔的丢、还是丢前一半或者后一半。<br>解决办法是引入时间等级（temporal
+                      level），方便我们决策哪些帧先被丢掉比较合适，这样就可以一个level一个level的丢了，就不用纠结怎么丢的问题了；<br><img src="http://ovbu9b92e.bkt.clouddn.com/frame6.jpg" alt=""><br>再来看参考关系，是不是更紧凑了，不是都参考non-dropable了，也会参考邻居droppable了，diff变小提高了压缩率<br>PS:
+                      隐含的是High Level只参考 low level</p>
+                    <p>同样面对只支持30fps的decoder开始丢帧，过程就变成了丢level<br><img src="http://ovbu9b92e.bkt.clouddn.com/frame7.jpg" alt=""><br><img src="http://ovbu9b92e.bkt.clouddn.com/frame8.jpg" alt=""><br><img src="http://ovbu9b92e.bkt.clouddn.com/frame9.jpg"
+                        alt=""></p>
+                    <p>总结下分层编码解决了什么问题：</p>
+                    <ul>
+                      <li>优化了时间伸缩策略，播放丢帧时候不再用猜</li>
+                      <li>优化了运动补偿，使得参考关系变得更紧凑，提高了压缩率</li>
+                      <li>还有下面这个，没查到什么意思，谁了解给科普下。</li>
+                    </ul>
+                    <p>怎么用分层编码呢？设置两个属性</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// Check VTSessionCopySupportedPropertyDictionary() for support kVTCompressionPropertyKey_BaseLayerFrameRate // temporal level 0 frame rate kVTCompressionPropertyKey_ExpectedFrameRate // frame rate of content</span></span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>继续举上面的🌰，<br>kVTCompressionPropertyKey_BaseLayerFrameRate设成30，kVTCompressionPropertyKey_ExpectedFrameRate设置成240,<br>BaseLayer是必须被解码的关键Level，然后其他Level是用来解码或者丢弃的，level从高到低的丢。</p>
+                    <h2 id="HEIF的正确打开姿势"><a href="#HEIF的正确打开姿势" class="headerlink" title="HEIF的正确打开姿势"></a>HEIF的正确打开姿势</h2>
+                    <h3 id="HEIF的发音"><a href="#HEIF的发音" class="headerlink" title="HEIF的发音"></a>HEIF的发音</h3>
+                    <p>德国人🇩🇪读Hife，法国🇫🇷读Eff，俄罗斯🇷🇺读Heef,<br>但诺基亚的研究人员对这个标准贡献最大，所以为了尊重他们，读成芬兰🇫🇮口音Hafe，尽管他们是少数<br><img src="http://ovbu9b92e.bkt.clouddn.com/heifpronounce.jpg" alt=""></p>
+                    <h3 id="Why-HEIF"><a href="#Why-HEIF" class="headerlink" title="Why HEIF"></a>Why HEIF</h3>
+                    <ul>
+                      <li>画质一样情况下，HEIF比起20多岁的JPEG平均小两倍，注意是平均，不是最多小两倍</li>
+                      <li>HEIF允许将图片分成若干区块，这对于大图的增量式解码很有帮助的,这里提到的区块(Tile)千万别和503中讲的CTU(coding tree unit)搞混了，Tile是帧内可以独立进行解码的矩形区域，包含多个按矩形排列的CTU（数目不要求一定相同），再形象点，Tile相当于华容道棋盘，CTU相当于华容道棋子，棋子大小不一定相同，定义这一结构的初衷是增强编解码的并行处理性能，类似高德地图或浏览器加载大网页的懒加载技术。</li>
+                      <li>HEIF支持了透明度、对比度、深度信息，现代图像格式优势尽显<br><img src="http://ovbu9b92e.bkt.clouddn.com/heifdepthmap.jpg" alt=""><br>对于iPhone 的双摄像头如何感知深度，session未涉及，但大体原理其实是很简单的<a href="https://www.zhihu.com/question/23418797" target="_blank" rel="noopener">光学+几何原理</a>，下面从知乎盗张图，上过初中的你一定能看懂，图中两个假象的摄像头距离越远测距精度越高,高大上的VR技术以此为前提<br><img
+                          src="http://ovbu9b92e.bkt.clouddn.com/zhihuceju.jpg" alt=""><br>深度信息可以辅助做很多图片编辑的效果，比如下面的背景部分加了Noir black and white filter</li>
+                    </ul>
+                    <p>原图<br><img src="http://ovbu9b92e.bkt.clouddn.com/origingirl.jpg" alt=""><br>前景加了fade filter，讲师说小女孩的裤子还是粉色没变，像素眼们怎么看<br><img src="http://ovbu9b92e.bkt.clouddn.com/origingirl1.jpg" alt=""><br>还可以这样，小女孩手里的花景深最小，保持原有色彩，其他深度部分都黑白<br><img
+                        src="http://ovbu9b92e.bkt.clouddn.com/origingirl2.jpg" alt=""><br>也可以控制前景背景的亮度，比如下图，要下雨了，小女孩还在诡异地笑<br><img src="http://ovbu9b92e.bkt.clouddn.com/origingirl3.jpg" alt=""><br>苹果工程师还是很诚实的，注意细节，这图绝对特么没P过，绝对Demo跑出来的<br><img src="http://ovbu9b92e.bkt.clouddn.com/orgingirlfoot1.jpg"
+                        alt=""><br><img src="http://ovbu9b92e.bkt.clouddn.com/orgingirlfoot2.jpg" alt=""></p>
+                    <p>想深入了解HEIF的depth map的同学，可以看507、508<br>HEIF不光支持静态图片，也支持图片序列，比如这种长曝光<br><img src="http://ovbu9b92e.bkt.clouddn.com/longExpose.jpg" alt=""></p>
+                    <p>为了演示HEIF的超高压缩率和区块懒加载（前文解释过的Tile技术）有多平滑，演讲人展示了在自己iPhone7照片里找了个全景图作为Demo，这个全景图是一个91k by 32k pixels的全景图，如果用RGB色彩空间TIFF容器的图片格式存储这个图片是2GB大小，对于HEIF只有160MB，而且JPEG对图片大小限制在64k by 64k pixels，甚至是不能用来存储这张图的，注意这就是你桌面那个叫Yosemite的破石头山。<br><img
+                        src="http://ovbu9b92e.bkt.clouddn.com/zoom1.jpg" alt=""><br>为了展示HEIF大小不受限制，而且有分区块的增量加载不会爆掉内存，演讲者一路放大照片，最后看到了照片中山路的限速标志<br><img src="http://ovbu9b92e.bkt.clouddn.com/zoom2.jpg" alt=""><br>讲真，这个Demo太东施效颦，和4年前<a href="http://nokiatech.github.io/heif/comparison.html"
+                        target="_blank" rel="noopener">Nokia</a>发布Lumia
+                      1020在草丛里找针的那个Zoom in Demo如出一辙</p>
+                    <h3 id="Low-Level-Access-To-HEIF"><a href="#Low-Level-Access-To-HEIF" class="headerlink" title="Low Level Access To HEIF"></a>Low Level Access To HEIF</h3>
+                    <p>读写一个图片的最底层的API来自ImageIO的CGImageSource和CGImageDestination，用法和以前读一个JPEG一样，只是换个扩展名，另一个区别是支持硬解的机器6s+确实会解码速度更快一些</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// Read a jpeg image from file</span></span><br><span class="line"><span class="keyword">let</span> inputURL = <span class="type">URL</span>(fileURLWithPath: <span class="string">"/tmp/image.heic"</span>)</span><br><span class="line"><span class="keyword">let</span> source = <span class="type">CGImageSourceCreateWithURL</span>(inputURL <span class="keyword">as</span> <span class="type">CFURL</span>, <span class="literal">nil</span>)</span><br><span class="line"><span class="keyword">let</span> imageProperties = <span class="type">CGImageSourceCopyPropertiesAtIndex</span>(source, <span class="number">0</span>, <span class="literal">nil</span>) <span class="keyword">as</span>? [<span class="type">String</span>: <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">let</span> image = <span class="type">CGImageSourceCreateImageAtIndex</span>(source, <span class="number">0</span>, <span class="literal">nil</span>)</span><br><span class="line"><span class="keyword">let</span> options = [kCGImageSourceCreateThumbnailFromImageIfAbsent <span class="keyword">as</span> <span class="type">String</span>: <span class="literal">true</span>, kCGImageSourceThumbnailMaxPixelSize <span class="keyword">as</span> <span class="type">String</span>: <span class="number">320</span>] <span class="keyword">as</span> [<span class="type">String</span>: <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">let</span> thumb = <span class="type">CGImageSourceCreateThumbnailAtIndex</span>(source, <span class="number">0</span>, options <span class="keyword">as</span> <span class="type">CFDictionary</span>)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>上面Zoom in Demo中提到的分块增量加载，可以从imageProperties一个叫TIFF的sub dictionary找到相关的重要参数，JPEG的metadata没这个信息 ：</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">let</span> imageProperties = <span class="type">CGImageSourceCopyPropertiesAtIndex</span>(source, <span class="number">0</span>, <span class="literal">nil</span>) <span class="keyword">as</span>? [<span class="type">String</span>: <span class="type">Any</span>]</span><br><span class="line"><span class="string">"&#123;TIFF&#125;"</span> = &#123;</span><br><span class="line">	<span class="type">DateTime</span> = <span class="string">"2017:04:01 22:50:24"</span>; <span class="type">Make</span> = <span class="type">Apple</span>;</span><br><span class="line">	<span class="type">Model</span> = <span class="string">"iPhone 7 Plus"</span>; <span class="type">Orientation</span> = <span class="number">1</span>;</span><br><span class="line">	<span class="type">ResolutionUnit</span> = <span class="number">2</span>;</span><br><span class="line">	<span class="type">Software</span> = <span class="string">"11.0"</span>;</span><br><span class="line">	<span class="type">TileLength</span> = <span class="number">512</span>;</span><br><span class="line">	<span class="type">TileWidth</span> = <span class="number">512</span>;</span><br><span class="line">	<span class="type">XResolution</span> = <span class="number">72</span>;</span><br><span class="line">	<span class="type">YResolution</span> = <span class="number">72</span>;</span><br><span class="line">&#125;;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>如何写HEIC图片文件，同样，把原来的jpg扩展名改成heic，注意用guard let做防御，一旦没有HEVC硬件编码器，destination 是nil,这是唯一能判断当前系统是否可以写HEIC的函数</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// Writing a CGImage to a HEIF file</span></span><br><span class="line"><span class="keyword">let</span> url = <span class="type">URL</span>(fileURLWithPath: <span class="string">"/tmp/output.heic"</span>)</span><br><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> destination = <span class="type">CGImageDestinationCreateWithURL</span>(url <span class="keyword">as</span> <span class="type">CFURL</span>,</span><br><span class="line"><span class="type">AVFileType</span>.heic <span class="keyword">as</span> <span class="type">CFString</span>, <span class="number">1</span>, <span class="literal">nil</span>)</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"unable to create CGImageDestination"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">CGImageDestinationAddImage</span>(imageDestination, image, <span class="literal">nil</span>) <span class="type">CGImageDestinationFinalize</span>(imageDestination)</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>HEIF与PhotoKit<br>Applying adjustments</p>
+                    <ul>
+                      <li>Photos </li>
+                      <li>Videos</li>
+                      <li>Live Photos</li>
+                    </ul>
+                    <p>Common workflows</p>
+                    <ul>
+                      <li>Display </li>
+                      <li>Backup</li>
+                      <li>Share</li>
+                    </ul>
+                    <h5 id="照片编辑"><a href="#照片编辑" class="headerlink" title="照片编辑"></a>照片编辑</h5>
+                    <p>第一个典型应用场景是读入一个图片、加旋转和滤镜，输出成通用的JPEG，对于读入图片是HEIF类型不用修改代码，PHContentEditingInput是透明的</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">applyPhotoFilter</span><span class="params">(<span class="number">_</span> filterName: String, input: PHContentEditingInput, output: PHContentEditingOutput, completion: <span class="params">()</span></span></span> -&gt; ()) &#123;</span><br><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> inputImage = <span class="type">CIImage</span>(contentsOf: input.fullSizeImageURL!) <span class="keyword">else</span> &#123; </span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"can't load input image"</span>) </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> outputImage = inputImage .applyingOrientation(input.fullSizeImageOrientation) .applyingFilter(filterName, withInputParameters: <span class="literal">nil</span>)</span><br><span class="line"><span class="comment">// Write the edited image as a JPEG.</span></span><br><span class="line"><span class="keyword">do</span> &#123; </span><br><span class="line">    <span class="keyword">try</span> <span class="keyword">self</span>.ciContext.writeJPEGRepresentation(of: outputImage,</span><br><span class="line">to: output.renderedContentURL, colorSpace: inputImage.colorSpace!, options: [:])</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="keyword">let</span> error &#123; </span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"can't apply filter to image: <span class="subst">\(error)</span>"</span>) </span><br><span class="line">&#125;</span><br><span class="line">completion()</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>第二个典型场景是读入一个视频，无论输入是不是HEVC，编辑并输出成H.264编码的通用视频，透明的。</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// Editing an HEVC video -- save as H.264</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">applyVideoFilter</span><span class="params">(<span class="number">_</span> filterName: String, input: PHContentEditingInput, output: PHContentEditingOutput, completionHandler: @escaping <span class="params">()</span></span></span> -&gt; ()) &#123;</span><br><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> avAsset = input.audiovisualAsset <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"can't get AV asset"</span>) </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> composition = <span class="type">AVVideoComposition</span>(asset: avAsset, applyingCIFiltersWithHandler: &#123; request <span class="keyword">in</span></span><br><span class="line">	<span class="keyword">let</span> img = request.sourceImage.applyingFilter(filterName, withInputParameters: <span class="literal">nil</span>) request.finish(with: img, context: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// Export the video composition to the output URL.</span></span><br><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> export = <span class="type">AVAssetExportSession</span>(asset: avAsset, presetName: <span class="type">AVAssetExportPresetHighestQuality</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"can't set up AV export session"</span>)</span><br><span class="line">&#125;</span><br><span class="line">export.outputFileType = <span class="type">AVFileType</span>.mov</span><br><span class="line">export.outputURL = output.renderedContentURL export.videoComposition = composition export.exportAsynchronously(completionHandler: completionHandler)</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>编辑Live Photo一样是格式透明的，不管输入是不是HEIF/HEVC,输出会是JPEG/H.264内容</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="comment">// Editing a HEIF/HEVC live photo -- format handled automatically</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">applyLivePhotoFilter</span><span class="params">(<span class="number">_</span> filterName: String, input: PHContentEditingInput, output: PHContentEditingOutput, completion: @escaping <span class="params">()</span></span></span> -&gt; ()) &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> livePhotoContext = <span class="type">PHLivePhotoEditingContext</span>(livePhotoEditingInput: input) </span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"can't get live photo"</span>) </span><br><span class="line">&#125;</span><br><span class="line">livePhotoContext.frameProcessor = &#123; frame, <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line"><span class="keyword">return</span> frame.image.applyingFilter(filterName, withInputParameters: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line">livePhotoContext.saveLivePhoto(to: output) &#123; success, error <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> success &#123;</span><br><span class="line">	completion() </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">	<span class="built_in">print</span>(<span class="string">"can't output live photo"</span>) &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <h3 id="拍摄HEIF主题"><a href="#拍摄HEIF主题" class="headerlink" title="拍摄HEIF主题"></a>拍摄HEIF主题</h3>
+                    <p>AVCapturePhotoOutput的用法<br><img src="http://ovbu9b92e.bkt.clouddn.com/captureheif.jpg" alt=""><br>HEIF拍摄的机型限制：iPhone7+ 和 10.5-inch iPad Pro+（NEW）<br><img src="http://ovbu9b92e.bkt.clouddn.com/capturedelegate.jpg" alt=""></p>
+                    <p>上图是AVCapturePhotoCaptureDelegate的处理流程，这个代理能很好支持拍照各个阶段,看上去扩展性可以，后来的迭代中也增加了didFinishRawCaptureFor支持RAW图片格式，也增加了didFinishProcessingLivePhotoMovie用来支持拍摄LivePhoto，但硬伤是iOS4之后一直用CoreMedia中的CMSampleBuffer，CMSampleBuffer可以用来存储各种媒体类型，同样适用于HEVC内容，但和HEIF格式的HEVC内容有本质区别，不支持分区存储增量解码，这样的内容会令解码器迷惑，所以有了新的照片拍摄结果“内存封装类AVCapturePhoto”，用来代替CMSampleBuffer，有如下特点：</p>
+                    <ol>
+                      <li>比CMSampleBuffer更快，可以专门优化他的传输</li>
+                      <li>100%不可修改，便于在module间共享</li>
+                      <li>专有格式支持</li>
+                    </ol>
+                    <p>AVCapturePhoto的格式：</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="keyword">open</span> <span class="class"><span class="keyword">class</span> <span class="title">AVCapturePhoto</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> timestamp: <span class="type">CMTime</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> isRawPhoto: <span class="type">Bool</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> pixelBuffer: <span class="type">CVPixelBuffer</span>? &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> previewPixelBuffer: <span class="type">CVPixelBuffer</span>? &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> embeddedThumbnailPhotoFormat: [<span class="type">String</span> : <span class="type">Any</span>]? &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> metadata: [<span class="type">String</span> : <span class="type">Any</span>] &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> depthData: <span class="type">AVDepthData</span>? &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> resolvedSettings: <span class="type">AVCaptureResolvedPhotoSettings</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> photoCount: <span class="type">Int</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> bracketSettings: <span class="type">AVCaptureBracketedStillImageSettings</span>? &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> sequenceCount: <span class="type">Int</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> lensStabilizationStatus: <span class="type">AVCaptureDevice</span>.<span class="type">LensStabilizationStatus</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">fileDataRepresentation</span><span class="params">()</span></span> -&gt; <span class="type">Data</span>?</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">cgImageRepresentation</span><span class="params">()</span></span> -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CGImage</span>&gt;?</span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">previewCGImageRepresentation</span><span class="params">()</span></span> -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CGImage</span>&gt;?</span><br><span class="line">&#125;</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>建议逐渐废弃之前AVCapturePhotoCaptureDelegate的老方法，未来会Deprecate</p>
+                    <figure class="highlight swift">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">photoOutput</span><span class="params">(<span class="number">_</span> output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto,</span></span></span><br><span class="line"><span class="function"><span class="params">error: Error?)</span></span></span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                    <p>用以往的方式存一个图片，意味着要大量操作thumbnail和metadata，会伴随很多图片Scale和压缩操作，性能上不是最优的。<br><img src="http://ovbu9b92e.bkt.clouddn.com/oldwaysave.jpg" alt=""><br>新API的处理方式是让你充分定制容器属性，比如可以在AVCapturePhotoSettings指定codec、文件类型，metadata里指定地点，指定缩略图的分辨率，请求后delegate
+                      返回的AVCapturePhoto已经被嵌入到HEIC容器，也包含了你要的那个缩略图，最后调用photo.fileDataRepresentation()的处理相比old way就简单多了，纯NSData到存储的字节copy，没有多余的压缩、缩放操作，尤其存HEIF图会充分释放性能优势<br><img src="http://ovbu9b92e.bkt.clouddn.com/newwaysave.jpg" alt=""></p>
+                    <h3 id="HEVC性能须知："><a href="#HEVC性能须知：" class="headerlink" title="HEVC性能须知："></a>HEVC性能须知：</h3>
+                    <p>1.如果一边在录制HEVC视频一边在拍HEIC照片的话（这例子感觉有点极端啊，比如一个直播推H.265，一边在拍照。。WTF），HEVC硬件编码器会很忙，如果你拍的是4K 60fps视频，编码器会忙出翔，他只能优先处理对实时性有更高要求的视频拍摄，你的拍照Request会滞后；且为了保证你拍摄高清视频的帧率deadline，在你请求拍照时只能分出很少的时间片来处理你的请求，HEIF的高压缩率是有时间成本的，这时候需要空间换时间，Trade
+                      off掉20%的压缩率，换尽快callback你要的照片，如何解决这个极端场景的问题？可以在拍照里设置用JPEG，HEVC编码器就清净了。<br>2.还有个极端场景是长曝光，长曝光输出的不是Video，是序列帧图片，而且有每秒10帧的基线要求，对编码器处理效率要求很高的，HEIF格式勉强可以cover 10fps的序列帧（序列帧中图像应该是相互独立的，无帧间预测，他的10fps可以理解成每秒10个关键帧），但帧率要求更高的话就切回JPEG吧。</p>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <footer class="post-footer">
+
+                    <div class="post-tags">
+
+                      <a href="/tags/HEVC/" rel="tag"># HEVC</a>
+
+                      <a href="/tags/H-265/" rel="tag"># H.265</a>
+
+                      <a href="/tags/HEIF/" rel="tag"># HEIF</a>
+
+                      <a href="/tags/WWDC/" rel="tag"># WWDC</a>
+
+                      <a href="/tags/2017/" rel="tag"># 2017</a>
+
+                      <a href="/tags/编码原理/" rel="tag"># 编码原理</a>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="post-nav">
+                      <div class="post-nav-next post-nav-item">
+
+                        <a href="/2017/08/27/[WWDC2017 Session 503] Introducing HEIF and HEVC/" rel="next" title="WWDC 2017 Session 503 Introducing HEIF and HEVC">
+                          <i class="fa fa-chevron-left"></i> WWDC 2017 Session 503 Introducing HEIF and HEVC
+                        </a>
+
+                      </div>
+
+                      <span class="post-nav-divider"></span>
+
+                      <div class="post-nav-prev post-nav-item">
+
+                        <a href="/2018/04/20/《哈弗非虚构写作课》读书笔记/" rel="prev" title="《哈弗非虚构写作课》读书笔记">
+                          《哈弗非虚构写作课》读书笔记 <i class="fa fa-chevron-right"></i>
+                        </a>
+
+                      </div>
+                    </div>
+
+
+
+
+                  </footer>
+                </div>
+
+
+
+              </article>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="comments" id="comments">
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+          <div class="sidebar-toggle-line-wrap">
+            <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+            <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+          </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-inner">
+
+
+
+
+            <ul class="sidebar-nav motion-element">
+              <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                Table of Contents
+              </li>
+              <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+                Overview
+              </li>
+            </ul>
+
+
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-overview">
+                <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+
+                  <p class="site-author-name" itemprop="name">六郎</p>
+                  <div class="site-description motion-element" itemprop="description">“Live well, Laugh often, Love much.”</div>
+                </div>
+
+
+                <nav class="site-state motion-element">
+
+                  <div class="site-state-item site-state-posts">
+
+                    <a href="/archives/">
+
+                      <span class="site-state-item-count">13</span>
+                      <span class="site-state-item-name">posts</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-categories">
+
+
+                    <a href="/categories/">
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">4</span>
+                      <span class="site-state-item-name">categories</span>
+                    </a>
+                  </div>
+
+
+
+
+
+                  <div class="site-state-item site-state-tags">
+
+
+                    <a href="/tags/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <span class="site-state-item-count">16</span>
+                      <span class="site-state-item-name">tags</span>
+                    </a>
+                  </div>
+
+                </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <!--noindex-->
+            <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+              <div class="post-toc">
+
+
+
+
+
+
+
+                <div class="post-toc-content">
+                  <ol class="nav">
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#前情提要"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#Access"><span class="nav-number">2.</span> <span class="nav-text">Access</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#Playback"><span class="nav-number">3.</span> <span class="nav-text">Playback</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#Capture"><span class="nav-number">4.</span> <span class="nav-text">Capture</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#Export"><span class="nav-number">5.</span> <span class="nav-text">Export</span></a></li>
+                    <li class="nav-item nav-level-1"><a class="nav-link" href="#高级主题："><span class="nav-number">6.</span> <span class="nav-text">高级主题：</span></a>
+                      <ol class="nav-child">
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#Bit-Depth"><span class="nav-number">6.1.</span> <span class="nav-text">Bit Depth</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#Hierarchical-Frame-Encoding"><span class="nav-number">6.2.</span> <span class="nav-text">Hierarchical Frame Encoding</span></a></li>
+                        <li class="nav-item nav-level-2"><a class="nav-link" href="#HEIF的正确打开姿势"><span class="nav-number">6.3.</span> <span class="nav-text">HEIF的正确打开姿势</span></a>
+                          <ol class="nav-child">
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#HEIF的发音"><span class="nav-number">6.3.1.</span> <span class="nav-text">HEIF的发音</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#Why-HEIF"><span class="nav-number">6.3.2.</span> <span class="nav-text">Why HEIF</span></a></li>
+                            <li class="nav-item nav-level-3"><a class="nav-link" href="#Low-Level-Access-To-HEIF"><span class="nav-number">6.3.3.</span> <span class="nav-text">Low Level Access To HEIF</span></a>
+                              <ol class="nav-child">
+                                <li class="nav-item nav-level-5"><a class="nav-link" href="#照片编辑"><span class="nav-number">6.3.3.0.1.</span> <span class="nav-text">照片编辑</span></a></li>
+                              </ol>
+                            </li>
+                          </ol>
+                        </li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#拍摄HEIF主题"><span class="nav-number">6.3.4.</span> <span class="nav-text">拍摄HEIF主题</span></a></li>
+                        <li class="nav-item nav-level-3"><a class="nav-link" href="#HEVC性能须知："><span class="nav-number">6.3.5.</span> <span class="nav-text">HEVC性能须知：</span></a></li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+
+              </div>
+            </div>
+            <!--/noindex-->
+
+
+
+
+          </div>
+        </aside>
+
+
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+          <span class="with-love" id="animate">
+            <i class="fa fa-user"></i>
+          </span>
+          <span class="author" itemprop="copyrightHolder">六郎</span>
+
+
+
+
+        </div>
+
+
+        <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+        <span class="post-meta-divider">|</span>
+
+
+
+        <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <script>
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+      window.Promise = null;
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+  <script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function(item) {
+      return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+      el: '#comments',
+      verify: false,
+      notify: false,
+      appId: 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+      appKey: 'BVemUJYa8azbst7hlR00hCkn',
+      placeholder: '请在此输入您的留言',
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: ,
+      lang: '' || 'zh-cn'
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', {
+          where: JSON.stringify({
+            url
+          })
+        })
+        .done(function({
+          results
+        }) {
+          if (results.length > 0) {
+            var counter = results[0];
+
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({
+                time: {
+                  '__op': 'Increment',
+                  'amount': 1
+                }
+              }))
+
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+
+              .fail(function({
+                responseJSON
+              }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+            console.error(
+              'ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.'
+            );
+
+          }
+        })
+        .fail(function({
+          responseJSON
+        }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz')
+        .done(function({
+          api_server
+        }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'cpCz4RKVyMs2VawqHCdUHBmM-gzGzoHsz',
+                'X-LC-Key': 'BVemUJYa8azbst7hlR00hCkn',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+
+          addCount(Counter);
+
+        });
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
